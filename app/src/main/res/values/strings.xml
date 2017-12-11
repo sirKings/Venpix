@@ -11,4 +11,15 @@
     <string name="facebook_icon">facebook icon</string>
     <string name="twitter_icon">twitter icon</string>
     <string name="googleplus_icon">googleplus icon</string>
+    <string name="edit_profile">edit profile</string>
+    <string name="profile_picture">profile picture</string>
+    <string name="cover_picture">cover picture</string>
+    <string name="capture_moment_button">capture moment button</string>
+    <string name="my_albums_button">my albums button</string>
+    <string name="create_new_album_button">create new album button</string>
+    <string name="my_moments_button">my moments button</string>
+    <string name="my_albums">my albums</string>
+    <string name="create_new_album">+ create new album</string>
+    <string name="capture_moments">+ capture moments</string>
+    <string name="my_moments">my moments</string>
 </resources>
