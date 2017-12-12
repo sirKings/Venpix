@@ -1,13 +1,115 @@
 package com.ladrope.venpix.controller
 
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.support.v7.app.AppCompatActivity
+import android.text.Html
+import android.view.Gravity
+import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
+import android.widget.TextSwitcher
+import android.widget.TextView
+import android.widget.ViewSwitcher
 import com.ladrope.venpix.R
+import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
+
+
+
+
+
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var textSwitcher: TextSwitcher
+    lateinit var dotsLayout: LinearLayout
+    private val timer = Timer()
+
+    var textList = arrayListOf<String>("Never let great moments slide pass you","Create an album and share your link with friends", "Get all your pictures in one vault and only you and your friends can see it")
+    var index = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        textSwitcher = hintSwitcher
+        dotsLayout = layoutDots;
+
+
+        setFactory()
+        loadAnimations()
+        startTimer()
+
+
     }
+
+    protected fun startTimer() {
+
+        timer.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                if(index < textList.size - 1){
+                    ++index
+                }else{
+                    index = 0
+                }
+                mHandler.obtainMessage(1).sendToTarget()
+            }
+        }, 0, 3000)
+    }
+
+    val mHandler: Handler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            textSwitcher.setText(textList[index])
+            addBottomDots(index)
+        }
+    }
+
+
+    fun loadAnimations() {
+      var  inAnimate = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left)
+      var  outAnimate = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right)
+
+        textSwitcher.setInAnimation(inAnimate)
+        textSwitcher.setOutAnimation(outAnimate)
+    }
+
+    fun setFactory() {
+        textSwitcher.setFactory(object : ViewSwitcher.ViewFactory {
+
+            override fun makeView(): View {
+
+                // Create run time textView with some attributes like gravity,
+                // color, etc.
+                val myText = TextView(this@MainActivity)
+                myText.gravity = Gravity.CENTER
+                myText.textSize = 24f
+                myText.setTextColor(Color.rgb(0,187,209))
+                return myText
+            }
+        })
+
+    }
+
+    private fun addBottomDots(index: Int) {
+        var dots = arrayOfNulls<TextView>(textList.size)
+
+        dotsLayout.removeAllViews()
+        for (i in 0 until textList.size) {
+            dots[i] = TextView(this)
+            dots[i]?.text = Html.fromHtml("&#8226;")
+            dots[i]?.textSize = 35f
+            dots[i]?.setTextColor(Color.rgb(187,187,187))
+            dotsLayout.addView(dots[i])
+        }
+        dots[index]?.setTextColor(Color.rgb(0,187,209))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timer.cancel()
+        timer.purge()
+    }
+
 }
