@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -15,9 +16,12 @@ import kotlinx.android.synthetic.main.activity_signin.*
 
 
 
+
+
 class signin : AppCompatActivity() {
 
     private var mAuth: FirebaseAuth? = null
+    private var progressBar: ProgressBar? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,11 +29,15 @@ class signin : AppCompatActivity() {
         setContentView(R.layout.activity_signin)
 
         mAuth = FirebaseAuth.getInstance()
+
+        progressBar = this.progressBar1
+        progressBar?.visibility = View.GONE
     }
 
 
 
     fun signInWithEmailAndPassword(view: View){
+        progressBar?.visibility = View.VISIBLE
         var email = signinEnterEmail.text.toString()
         var password = signinEnterPassword.text.toString()
         mAuth?.signInWithEmailAndPassword(email, password)
@@ -39,10 +47,12 @@ class signin : AppCompatActivity() {
                             // Sign in success, update UI with the signed-in user's information
                             println("signInWithEmail:success")
                              //currentUser = mAuth?.currentUser
+                            progressBar?.visibility = View.GONE
                              goHome()
                         } else {
                             // If sign in fails, display a message to the user.
                             println("signInWithEmail:failure")
+                            progressBar?.visibility = View.GONE
                             Toast.makeText(this@signin, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show()
                             //updateUI(null)
