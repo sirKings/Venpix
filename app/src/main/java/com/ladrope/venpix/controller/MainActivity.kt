@@ -1,5 +1,6 @@
 package com.ladrope.venpix.controller
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +14,8 @@ import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
 import android.widget.ViewSwitcher
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
 import com.ladrope.venpix.R
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -34,6 +37,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //facebook sdk
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+
         textSwitcher = hintSwitcher
         dotsLayout = layoutDots;
 
@@ -44,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
 
     protected fun startTimer() {
 
@@ -64,6 +72,16 @@ class MainActivity : AppCompatActivity() {
             textSwitcher.setText(textList[index])
             addBottomDots(index)
         }
+    }
+
+    fun signInClicked (view: View){
+        var signInIntent = Intent(this@MainActivity, signin::class.java)
+        startActivity(signInIntent)
+    }
+
+    fun signUpClicked (view: View){
+        var signInIntent = Intent(this@MainActivity, signup::class.java)
+        startActivity(signInIntent)
     }
 
 
@@ -106,8 +124,8 @@ class MainActivity : AppCompatActivity() {
         dots[index]?.setTextColor(Color.rgb(0,187,209))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         timer.cancel()
         timer.purge()
     }

@@ -8,7 +8,7 @@
     tools:context="com.ladrope.venpix.controller.signup">
 
     <EditText
-        android:id="@+id/name"
+        android:id="@+id/signupEnterName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -21,6 +21,7 @@
         android:ems="10"
         android:hint="@string/enter_name"
         android:inputType="textPersonName"
+        android:textColor="@color/colorAccent"
         android:textColorHint="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/signupEnterEmail"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +49,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="48dp"
         android:background="@color/colorAccent"
+        android:onClick="signUpWithEmailAndPassword"
         android:text="@string/sign_up"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,15 +66,17 @@
         android:layout_marginStart="32dp"
         android:backgroundTint="@color/colorAccent"
         android:drawableLeft="@drawable/email"
+        android:drawableStart="@drawable/email"
         android:drawableTint="@color/colorAccent"
         android:ems="10"
         android:hint="@string/enter_email"
         android:inputType="textEmailAddress"
+        android:textColor="@color/colorAccent"
         android:textColorHint="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/signupEnterPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" android:drawableStart="@drawable/email"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/signupEnterPassword"
@@ -83,15 +87,17 @@
         android:layout_marginStart="32dp"
         android:backgroundTint="@color/colorAccent"
         android:drawableLeft="@drawable/lock"
+        android:drawableStart="@drawable/lock"
         android:drawableTint="@color/colorAccent"
         android:ems="10"
         android:hint="@string/enter_password"
         android:inputType="textPassword"
+        android:textColor="@color/colorAccent"
         android:textColorHint="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/signupConfirmPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" android:drawableStart="@drawable/lock"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/signupConfirmPassword"
@@ -107,6 +113,7 @@
         android:ems="10"
         android:hint="@string/confirm_password"
         android:inputType="textPassword"
+        android:textColor="@color/colorAccent"
         android:textColorHint="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"

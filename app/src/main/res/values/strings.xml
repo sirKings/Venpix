@@ -1,4 +1,9 @@
 <resources>
+
+    <string name="facebook_app_id">1529381790486231</string>
+    <string name="fb_login_protocol_scheme">fb1529381790486231</string>
+
+
     <string name="app_name">VenPix</string>
     <string name="sign_up">sign up</string>
     <string name="sign_in">Sign In</string>
@@ -22,4 +27,8 @@
     <string name="create_new_album">+ create new album</string>
     <string name="capture_moments">+ capture moments</string>
     <string name="my_moments">my moments</string>
+    <string name="invalidEmail">Enter a valid Email</string>
+    <string name="passwordMatch">Passwords must match</string>
+
+
 </resources>
