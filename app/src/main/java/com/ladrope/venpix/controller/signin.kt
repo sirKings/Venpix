@@ -30,8 +30,8 @@ class signin : AppCompatActivity() {
 
 
     fun signInWithEmailAndPassword(view: View){
-        var email = signinEnterEmail.toString()
-        var password = signinEnterPassword.toString()
+        var email = signinEnterEmail.text.toString()
+        var password = signinEnterPassword.text.toString()
         mAuth?.signInWithEmailAndPassword(email, password)
                 ?.addOnCompleteListener(this, object : OnCompleteListener<AuthResult> {
                     override fun onComplete(task: Task<AuthResult>) {
