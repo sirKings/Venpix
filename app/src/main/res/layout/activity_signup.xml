@@ -135,12 +135,12 @@
         app:layout_constraintGuide_begin="20dp" />
 
     <ImageButton
-        android:id="@+id/facebookIcon"
+        android:id="@+id/facebookIcon2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/facebook_icon"
-        app:layout_constraintEnd_toStartOf="@+id/twitterIcon"
+        app:layout_constraintEnd_toStartOf="@+id/twitterIcon2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -148,27 +148,28 @@
         app:srcCompat="@android:drawable/btn_star_big_on" />
 
     <ImageButton
-        android:id="@+id/twitterIcon"
+        android:id="@+id/twitterIcon2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:contentDescription="@string/twitter_icon"
-        app:layout_constraintEnd_toStartOf="@+id/googleplusIcon"
+        app:layout_constraintEnd_toStartOf="@+id/googleplusIcon2"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/facebookIcon"
-        app:layout_constraintTop_toTopOf="@+id/facebookIcon"
+        app:layout_constraintStart_toEndOf="@+id/facebookIcon2"
+        app:layout_constraintTop_toTopOf="@+id/facebookIcon2"
         app:srcCompat="@android:drawable/btn_star_big_on" />
 
     <ImageButton
-        android:id="@+id/googleplusIcon"
+        android:id="@+id/googleplusIcon2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/googleplus_icon"
+        android:onClick="signUpWithGoogle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/twitterIcon"
-        app:layout_constraintTop_toTopOf="@+id/twitterIcon"
+        app:layout_constraintStart_toEndOf="@+id/twitterIcon2"
+        app:layout_constraintTop_toTopOf="@+id/twitterIcon2"
         app:srcCompat="@android:drawable/btn_star_big_on" />
 
     <TextView
