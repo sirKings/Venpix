@@ -29,6 +29,8 @@
     <string name="my_moments">my moments</string>
     <string name="invalidEmail">Enter a valid Email</string>
     <string name="passwordMatch">Passwords must match</string>
+    <string name="loginCancel">Authentication denied</string>
+    <string name="error">An error occurred</string>
 
 
 </resources>

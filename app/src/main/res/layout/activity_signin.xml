@@ -100,6 +100,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/facebook_icon"
+        android:onClick="signInWithFacebook"
         app:layout_constraintEnd_toStartOf="@+id/twitterIcon"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -125,11 +126,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/googleplus_icon"
+        android:onClick="signInWithGoogle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/twitterIcon"
         app:layout_constraintTop_toTopOf="@+id/twitterIcon"
         app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/textView"

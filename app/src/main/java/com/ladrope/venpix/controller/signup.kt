@@ -6,6 +6,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -13,14 +20,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.*
 import com.ladrope.venpix.R
 import com.ladrope.venpix.utilities.RC_SIGN_IN
 import com.ladrope.venpix.utilities.isValidEmail
 import kotlinx.android.synthetic.main.activity_signup.*
+
+
+
+
 
 
 
@@ -30,6 +38,8 @@ class signup : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
     private var progressBar: ProgressBar? = null
     private var mGoogleSignInClient: GoogleSignInClient? = null
+    private var mCallbackManager: CallbackManager? = null
+    private var mlogin: LoginButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +54,32 @@ class signup : AppCompatActivity() {
                 .requestEmail()
                 .build()
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        mCallbackManager = CallbackManager.Factory.create()
+
+        mlogin = login_button
+        mlogin?.setReadPermissions("email", "public_profile")
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(loginResult: LoginResult) {
+                        // App code
+                        firebaseAuthWithFacebook(loginResult.accessToken)
+                    }
+
+                    override fun onCancel() {
+                        // App code
+                        val loginCancel: Int = resources.getIdentifier("LoginCancel", "string", packageName)
+                        Toast.makeText(this@signup, loginCancel, Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onError(exception: FacebookException) {
+                        // App code
+                        val error: Int = resources.getIdentifier("error", "string", packageName)
+                        Toast.makeText(this@signup, error, Toast.LENGTH_SHORT).show()
+                    }
+                })
+
 //        val drawable = resources.getDrawable(drawableID / mipmapID)
 //        var emailDrawable = DrawableCompat.wrap(email)
 //        DrawableCompat.setTint(emailDrawable, resources.getColor(R.color.colorAccent))
@@ -145,15 +180,53 @@ class signup : AppCompatActivity() {
                 // Google Sign In failed, update UI appropriately
                 println("Google sign in failed")
                 // ...
+                val error: Int = resources.getIdentifier("error", "string", packageName)
+                Toast.makeText(this@signup, error, Toast.LENGTH_SHORT).show()
+
             }
 
         }
+
+        mCallbackManager?.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         println("firebaseAuthWithGoogle:" + acct.id!!)
         startLogin(false)
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        mAuth?.signInWithCredential(credential)
+                ?.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        println("signInWithCredential:success")
+                        startLogin(true)
+                        val user = mAuth?.getCurrentUser()
+                        //updateUI(user)
+                        goHome()
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        println("signInWithCredential:failure")
+                        startLogin(true)
+                        val error: Int = resources.getIdentifier("error", "string", packageName)
+                        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+                        //updateUI(null)
+                    }
+
+                    // ...
+                }
+    }
+
+    // facebook Login
+
+    fun signUpWithFacebook(view: View){
+        mlogin?.performClick()
+    }
+
+
+    private fun firebaseAuthWithFacebook(token: AccessToken) {
+        println("firebaseAuthWithFacebook:" + token)
+        startLogin(false)
+        val credential = FacebookAuthProvider.getCredential(token.token)
         mAuth?.signInWithCredential(credential)
                 ?.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {

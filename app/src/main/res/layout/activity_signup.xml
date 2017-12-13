@@ -127,6 +127,12 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.6" />
 
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline6"
         android:layout_width="wrap_content"
@@ -140,6 +146,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/facebook_icon"
+        android:onClick="signUpWithFacebook"
         app:layout_constraintEnd_toStartOf="@+id/twitterIcon2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"

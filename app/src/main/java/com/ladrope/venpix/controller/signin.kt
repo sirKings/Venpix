@@ -6,6 +6,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -14,6 +21,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.ladrope.venpix.R
@@ -21,13 +29,13 @@ import com.ladrope.venpix.utilities.RC_SIGN_IN
 import kotlinx.android.synthetic.main.activity_signin.*
 
 
-
-
 class signin : AppCompatActivity() {
 
     private var mAuth: FirebaseAuth? = null
     private var progressBar: ProgressBar? = null
     private var mGoogleSignInClient: GoogleSignInClient? = null
+    private var mCallbackManager: CallbackManager? = null
+    private var mlogin: LoginButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +52,30 @@ class signin : AppCompatActivity() {
                 .build()
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        mCallbackManager = CallbackManager.Factory.create()
+
+        mlogin = login_button2
+        mlogin?.setReadPermissions("email", "public_profile")
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(loginResult: LoginResult) {
+                        // App code
+                        firebaseAuthWithFacebook(loginResult.accessToken)
+                    }
+
+                    override fun onCancel() {
+                        // App code
+                        val loginCancel: Int = resources.getIdentifier("LoginCancel", "string", packageName)
+                        Toast.makeText(this@signin, loginCancel, Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onError(exception: FacebookException) {
+                        // App code
+                        val error: Int = resources.getIdentifier("error", "string", packageName)
+                        Toast.makeText(this@signin, error, Toast.LENGTH_SHORT).show()
+                    }
+                })
     }
 
 
@@ -123,6 +155,9 @@ class signin : AppCompatActivity() {
             }
 
         }
+
+        // facebook callbackmanager
+        mCallbackManager?.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
@@ -137,6 +172,38 @@ class signin : AppCompatActivity() {
                         startLogin(true)
                         val user = mAuth?.getCurrentUser()
                         //updateUI(user)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        println("signInWithCredential:failure")
+                        startLogin(true)
+                        Toast.makeText(this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show()
+                        //updateUI(null)
+                    }
+
+                    // ...
+                }
+    }
+
+    // facebook signin
+    fun signInWithFacebook(view: View){
+        mlogin?.performClick()
+    }
+
+
+    private fun firebaseAuthWithFacebook(token: AccessToken) {
+        println("firebaseAuthWithFacebook:" + token)
+        startLogin(false)
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        mAuth?.signInWithCredential(credential)
+                ?.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        println("signInWithCredential:success")
+                        startLogin(true)
+                        val user = mAuth?.getCurrentUser()
+                        //updateUI(user)
+                        goHome()
                     } else {
                         // If sign in fails, display a message to the user.
                         println("signInWithCredential:failure")
