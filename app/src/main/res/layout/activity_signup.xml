@@ -17,7 +17,6 @@
         android:backgroundTint="@color/colorAccent"
         android:drawableLeft="@drawable/person"
         android:drawableStart="@drawable/person"
-        android:drawableTint="@color/colorAccent"
         android:ems="10"
         android:hint="@string/enter_name"
         android:inputType="textPersonName"
@@ -38,7 +37,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/VENPIX" />
 
     <Button
         android:id="@+id/signupSignupBtn"
@@ -67,7 +66,6 @@
         android:backgroundTint="@color/colorAccent"
         android:drawableLeft="@drawable/email"
         android:drawableStart="@drawable/email"
-        android:drawableTint="@color/colorAccent"
         android:ems="10"
         android:hint="@string/enter_email"
         android:inputType="textEmailAddress"
@@ -88,7 +86,6 @@
         android:backgroundTint="@color/colorAccent"
         android:drawableLeft="@drawable/lock"
         android:drawableStart="@drawable/lock"
-        android:drawableTint="@color/colorAccent"
         android:ems="10"
         android:hint="@string/enter_password"
         android:inputType="textPassword"
@@ -109,7 +106,6 @@
         android:backgroundTint="@color/colorAccent"
         android:drawableLeft="@drawable/lock"
         android:drawableStart="@drawable/lock"
-        android:drawableTint="@color/colorAccent"
         android:ems="10"
         android:hint="@string/confirm_password"
         android:inputType="textPassword"
@@ -133,6 +129,12 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/login_button_twitter2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline6"
         android:layout_width="wrap_content"
@@ -145,6 +147,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/facebook_icon"
         android:onClick="signUpWithFacebook"
         app:layout_constraintEnd_toStartOf="@+id/twitterIcon2"
@@ -152,7 +155,7 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/facebook" />
 
     <ImageButton
         android:id="@+id/twitterIcon2"
@@ -160,24 +163,27 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/twitter_icon"
+        android:onClick="signUpWithTwitter"
         app:layout_constraintEnd_toStartOf="@+id/googleplusIcon2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/facebookIcon2"
         app:layout_constraintTop_toTopOf="@+id/facebookIcon2"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/twitter" />
 
     <ImageButton
         android:id="@+id/googleplusIcon2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/googleplus_icon"
+        android:background="@android:color/transparent"
         android:onClick="signUpWithGoogle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/twitterIcon2"
         app:layout_constraintTop_toTopOf="@+id/twitterIcon2"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/googleplus"/>
 
     <TextView
         android:id="@+id/textView"

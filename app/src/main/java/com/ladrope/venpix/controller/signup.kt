@@ -24,22 +24,28 @@ import com.google.firebase.auth.*
 import com.ladrope.venpix.R
 import com.ladrope.venpix.utilities.RC_SIGN_IN
 import com.ladrope.venpix.utilities.isValidEmail
+import com.twitter.sdk.android.core.Callback
+import com.twitter.sdk.android.core.Result
+import com.twitter.sdk.android.core.TwitterException
+import com.twitter.sdk.android.core.TwitterSession
+import com.twitter.sdk.android.core.identity.TwitterLoginButton
 import kotlinx.android.synthetic.main.activity_signup.*
-
-
-
-
-
-
 
 
 class signup : AppCompatActivity() {
 
     private var mAuth: FirebaseAuth? = null
     private var progressBar: ProgressBar? = null
+
+    // google signin
     private var mGoogleSignInClient: GoogleSignInClient? = null
+
+    // facebook signin
     private var mCallbackManager: CallbackManager? = null
     private var mlogin: LoginButton? = null
+
+    //twitter login
+    private var mLoginButton: TwitterLoginButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +62,9 @@ class signup : AppCompatActivity() {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        mCallbackManager = CallbackManager.Factory.create()
 
+        //facebook login manager
+        mCallbackManager = CallbackManager.Factory.create()
         mlogin = login_button
         mlogin?.setReadPermissions("email", "public_profile")
         LoginManager.getInstance().registerCallback(mCallbackManager,
@@ -80,11 +87,20 @@ class signup : AppCompatActivity() {
                     }
                 })
 
-//        val drawable = resources.getDrawable(drawableID / mipmapID)
-//        var emailDrawable = DrawableCompat.wrap(email)
-//        DrawableCompat.setTint(emailDrawable, resources.getColor(R.color.colorAccent))
-//        DrawableCompat.setTintMode(emailDrawable, PorterDuff.Mode.SRC_IN)
-//        editText.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        //twitter login manager
+        mLoginButton = login_button_twitter2
+
+        mLoginButton?.callback = (object : Callback<TwitterSession>() {
+            override fun success(result: Result<TwitterSession>) {
+
+                firebaseAuthWithTwitter(result.data)
+            }
+
+            override fun failure(exception: TwitterException) {
+                // Do something on failure
+            }
+        })
+
     }
 
 
@@ -186,8 +202,11 @@ class signup : AppCompatActivity() {
             }
 
         }
-
+        // facebook callback manager
         mCallbackManager?.onActivityResult(requestCode, resultCode, data)
+
+        //twitter calback manager
+        mLoginButton?.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
@@ -247,6 +266,37 @@ class signup : AppCompatActivity() {
 
                     // ...
                 }
+    }
+
+
+    // twitter login
+    fun signUpWithTwitter(view: View){
+        mLoginButton?.performClick()
+    }
+
+    private fun firebaseAuthWithTwitter(session: TwitterSession){
+        val credential = TwitterAuthProvider.getCredential(session.authToken.token, session.authToken.secret)
+        mAuth?.signInWithCredential(credential)
+                ?.addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        println("signInWithCredential:success")
+                        startLogin(true)
+                        val user = mAuth?.getCurrentUser()
+                        //updateUI(user)
+                        goHome()
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        println("signInWithCredential:failure")
+                        startLogin(true)
+                        Toast.makeText(this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show()
+                        //updateUI(null)
+                    }
+
+                    // ...
+                }
+
     }
 
 }

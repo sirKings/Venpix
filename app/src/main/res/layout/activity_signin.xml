@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/VENPIX" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline3"
@@ -37,13 +37,11 @@
         android:id="@+id/signinEnterPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:backgroundTint="@color/colorAccent"
         android:drawableLeft="@drawable/lock"
         android:drawableStart="@drawable/lock"
-        android:drawableTint="@color/colorAccent"
         android:ems="10"
         android:hint="@string/enter_password"
         android:inputType="textPassword"
@@ -51,7 +49,6 @@
         android:textColorHint="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -64,7 +61,6 @@
         android:backgroundTint="@color/colorAccent"
         android:drawableLeft="@drawable/email"
         android:drawableStart="@drawable/email"
-        android:drawableTint="@color/colorAccent"
         android:ems="10"
         android:hint="@string/enter_email"
         android:inputType="textEmailAddress"
@@ -99,6 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/facebook_icon"
         android:onClick="signInWithFacebook"
         app:layout_constraintEnd_toStartOf="@+id/twitterIcon"
@@ -106,7 +103,7 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/facebook" />
 
     <ImageButton
         android:id="@+id/twitterIcon"
@@ -114,30 +111,39 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/twitter_icon"
+        android:onClick="signInWithTwitter"
         app:layout_constraintEnd_toStartOf="@+id/googleplusIcon"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/facebookIcon"
         app:layout_constraintTop_toTopOf="@+id/facebookIcon"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/twitter" />
 
     <ImageButton
         android:id="@+id/googleplusIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:contentDescription="@string/googleplus_icon"
         android:onClick="signInWithGoogle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/twitterIcon"
         app:layout_constraintTop_toTopOf="@+id/twitterIcon"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/googleplus" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone" />
+
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/login_button_twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/textView"

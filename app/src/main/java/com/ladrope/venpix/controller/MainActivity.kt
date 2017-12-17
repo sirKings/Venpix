@@ -17,6 +17,7 @@ import android.widget.ViewSwitcher
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.ladrope.venpix.R
+import com.twitter.sdk.android.core.Twitter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -38,11 +39,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //facebook sdk
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
+        FacebookSdk.sdkInitialize(getApplicationContext())
+        AppEventsLogger.activateApp(this)
+
+        //Twitter initialization
+        Twitter.initialize(this)
 
         textSwitcher = hintSwitcher
-        dotsLayout = layoutDots;
+        dotsLayout = layoutDots
 
 
         setFactory()
