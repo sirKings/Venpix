@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.ladrope.venpix.R
+import com.ladrope.venpix.services.User
+import com.ladrope.venpix.services.createUser
 import com.ladrope.venpix.utilities.RC_SIGN_IN
 import com.ladrope.venpix.utilities.isValidEmail
 import com.twitter.sdk.android.core.Callback
@@ -98,6 +100,9 @@ class signup : AppCompatActivity() {
 
             override fun failure(exception: TwitterException) {
                 // Do something on failure
+                // App code
+                val error: Int = resources.getIdentifier("error", "string", packageName)
+                Toast.makeText(this@signup, error, Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -126,6 +131,8 @@ class signup : AppCompatActivity() {
 
                                     currentUser?.updateProfile(profileUpdates)
                                     startLogin(true)
+                                    val newUser = User(currentUser?.displayName, currentUser?.email)
+                                    createUser(newUser,currentUser?.uid)
                                     goHome()
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -220,7 +227,8 @@ class signup : AppCompatActivity() {
                         println("signInWithCredential:success")
                         startLogin(true)
                         val user = mAuth?.getCurrentUser()
-                        //updateUI(user)
+                        val newUser = User(user?.displayName, user?.email)
+                        createUser(newUser, user?.uid)
                         goHome()
                     } else {
                         // If sign in fails, display a message to the user.
@@ -253,7 +261,8 @@ class signup : AppCompatActivity() {
                         println("signInWithCredential:success")
                         startLogin(true)
                         val user = mAuth?.getCurrentUser()
-                        //updateUI(user)
+                        val newUser = User(user?.displayName, user?.email)
+                        createUser(newUser, user?.uid)
                         goHome()
                     } else {
                         // If sign in fails, display a message to the user.
@@ -275,6 +284,7 @@ class signup : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithTwitter(session: TwitterSession){
+        startLogin(false)
         val credential = TwitterAuthProvider.getCredential(session.authToken.token, session.authToken.secret)
         mAuth?.signInWithCredential(credential)
                 ?.addOnCompleteListener(this) { task ->
@@ -283,6 +293,8 @@ class signup : AppCompatActivity() {
                         println("signInWithCredential:success")
                         startLogin(true)
                         val user = mAuth?.getCurrentUser()
+                        val newUser = User(user?.displayName, user?.email)
+                        createUser(newUser, user?.uid)
                         //updateUI(user)
                         goHome()
                     } else {

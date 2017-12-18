@@ -31,24 +31,13 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:contentDescription="@string/profile_picture"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/button"
+        app:layout_constraintBottom_toBottomOf="@+id/editProfile"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/paschal" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/button_border"
-        android:padding="10dp"
-        android:text="@string/edit_profile"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline7" />
 
     <ImageView
         android:id="@+id/captureMoments"
@@ -59,6 +48,7 @@
         android:layout_marginStart="16dp"
         android:contentDescription="@string/capture_moment_button"
         android:foreground="#b0000000"
+        android:foregroundTint="#b0000000"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/myMoments"
         app:layout_constraintDimensionRatio="16:9"
@@ -73,6 +63,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="76dp"
         android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:contentDescription="@string/my_moments_button"
         android:foreground="#b0000000"
         android:scaleType="centerCrop"
@@ -84,7 +75,7 @@
         app:srcCompat="@drawable/garden1" />
 
     <ImageView
-        android:id="@+id/createAlbum"
+        android:id="@+id/createAlbums"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
@@ -104,7 +95,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:contentDescription="@string/my_albums_button"
         android:foreground="#b0000000"
         android:scaleType="centerCrop"
@@ -135,10 +128,10 @@
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/createAlbum"
-        app:layout_constraintEnd_toEndOf="@+id/createAlbum"
-        app:layout_constraintStart_toStartOf="@+id/createAlbum"
-        app:layout_constraintTop_toTopOf="@+id/createAlbum" />
+        app:layout_constraintBottom_toBottomOf="@+id/createAlbums"
+        app:layout_constraintEnd_toEndOf="@+id/createAlbums"
+        app:layout_constraintStart_toStartOf="@+id/createAlbums"
+        app:layout_constraintTop_toTopOf="@+id/createAlbums" />
 
     <TextView
         android:id="@+id/textView4"
@@ -196,5 +189,31 @@
         app:layout_constraintEnd_toEndOf="@+id/myMoments"
         app:layout_constraintStart_toStartOf="@+id/myMoments"
         app:layout_constraintTop_toTopOf="@+id/myMoments" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/profilePicture"
+        app:layout_constraintTop_toTopOf="@+id/guideline7" />
+
+    <ImageButton
+        android:id="@+id/editProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/edit_profile"
+        app:srcCompat="@drawable/setting"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline7"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="10dp"
+        android:background="@android:color/transparent" />
 
 </android.support.constraint.ConstraintLayout>

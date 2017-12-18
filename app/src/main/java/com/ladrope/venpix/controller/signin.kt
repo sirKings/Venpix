@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.ladrope.venpix.R
+import com.ladrope.venpix.services.User
+import com.ladrope.venpix.services.createUser
 import com.ladrope.venpix.utilities.RC_SIGN_IN
 import com.twitter.sdk.android.core.Callback
 import com.twitter.sdk.android.core.Result
@@ -115,7 +117,9 @@ class signin : AppCompatActivity() {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             println("signInWithEmail:success")
-                             //currentUser = mAuth?.currentUser
+                            var currentUser = mAuth?.currentUser
+                            val newUser = User(currentUser?.displayName, currentUser?.email)
+                            createUser(newUser,currentUser?.uid)
                             startLogin(true)
                              goHome()
                         } else {
@@ -198,8 +202,10 @@ class signin : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         println("signInWithCredential:success")
                         startLogin(true)
-                        val user = mAuth?.getCurrentUser()
-                        //updateUI(user)
+                        var currentUser = mAuth?.currentUser
+                        val newUser = User(currentUser?.displayName, currentUser?.email)
+                        createUser(newUser,currentUser?.uid)
+                        goHome()
                     } else {
                         // If sign in fails, display a message to the user.
                         println("signInWithCredential:failure")
@@ -229,8 +235,9 @@ class signin : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         println("signInWithCredential:success")
                         startLogin(true)
-                        val user = mAuth?.getCurrentUser()
-                        //updateUI(user)
+                        var currentUser = mAuth?.currentUser
+                        val newUser = User(currentUser?.displayName, currentUser?.email)
+                        createUser(newUser,currentUser?.uid)
                         goHome()
                     } else {
                         // If sign in fails, display a message to the user.
@@ -268,8 +275,9 @@ class signin : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         println("signInWithCredential:success")
                         startLogin(true)
-                        val user = mAuth?.getCurrentUser()
-                        //updateUI(user)
+                        var currentUser = mAuth?.currentUser
+                        val newUser = User(currentUser?.displayName, currentUser?.email)
+                        createUser(newUser,currentUser?.uid)
                         goHome()
                     } else {
                         // If sign in fails, display a message to the user.

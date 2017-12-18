@@ -14,16 +14,13 @@ import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
 import android.widget.ViewSwitcher
+import com.cloudinary.android.MediaManager
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.ladrope.venpix.R
 import com.twitter.sdk.android.core.Twitter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-
-
-
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -44,6 +41,10 @@ class MainActivity : AppCompatActivity() {
 
         //Twitter initialization
         Twitter.initialize(this)
+
+
+        // Cloudinary Initialization
+        MediaManager.init(this)
 
         textSwitcher = hintSwitcher
         dotsLayout = layoutDots
