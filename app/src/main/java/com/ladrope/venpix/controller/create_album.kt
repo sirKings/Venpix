@@ -10,11 +10,10 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Html
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import com.google.firebase.auth.FirebaseAuth
 import com.ladrope.venpix.R
+import com.ladrope.venpix.services.Album
 import io.branch.indexing.BranchUniversalObject
 import io.branch.referral.Branch
 import io.branch.referral.BranchError
@@ -39,6 +38,10 @@ class create_album: AppCompatActivity() {
     var plan: Int = 1
     val buo = BranchUniversalObject()
 
+    private var mAuth: FirebaseAuth? = null
+
+    private var progressBar: ProgressBar? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +57,11 @@ class create_album: AppCompatActivity() {
         dotsLayout = layoutDots
         addBottomDots(index)
         next = btn_next
+
+        mAuth = FirebaseAuth.getInstance()
+
+        progressBar = progressBar3
+        progressBar?.visibility = View.GONE
     }
 
     internal inner class ViewPagerAdapter(manager:FragmentManager): FragmentPagerAdapter(manager) {
@@ -141,8 +149,13 @@ class create_album: AppCompatActivity() {
             }else {
                 //purchase a store value
 
+                //create an album
+                startLogin(false)
+                val uid = mAuth?.uid
+                val albumKey = createAlbum(title, desc, uid)
+
                 //create Link
-                createLink(title, desc, plan)
+                createLink(title, desc, plan, albumKey)
             }
         }
     }
@@ -186,8 +199,8 @@ class create_album: AppCompatActivity() {
         premuimCard.setCardBackgroundColor(Color.WHITE)
     }
 
-    fun createLink(title: String, desc: String, plan: Int?){
-        buo.setCanonicalIdentifier("albums/1")
+    fun createLink(title: String, desc: String, plan: Int?, key: String){
+        buo.setCanonicalIdentifier(key)
                 .setTitle(title)
                 .setContentDescription(desc)
                 .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
@@ -220,5 +233,25 @@ class create_album: AppCompatActivity() {
             override fun onLinkShareResponse(sharedLink: String, sharedChannel: String, error: BranchError) {}
             override fun onChannelSelected(channelName: String) {}
         })
+    }
+
+    fun createAlbum(title: String, desc: String, uid: String?): String{
+        val album = Album(title, desc, uid)
+        val albumKey = com.ladrope.venpix.services.createAlbum(album)
+        startLogin(true)
+        return albumKey
+    }
+
+    private fun startLogin(status: Boolean){
+
+        if(status == false){
+            progressBar?.visibility = View.VISIBLE
+        }else {
+            progressBar?.visibility = View.GONE
+        }
+
+        next.isClickable = status
+        val prev = btn_skip
+        prev.isClickable = status
     }
 }

@@ -53,4 +53,5 @@
         android:text="@string/prev"
         android:textColor="@color/colorAccent" />
 
+
 </RelativeLayout>
