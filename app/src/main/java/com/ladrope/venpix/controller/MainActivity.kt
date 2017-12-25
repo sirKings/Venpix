@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.text.Html
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -17,9 +18,13 @@ import android.widget.ViewSwitcher
 import com.cloudinary.android.MediaManager
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
+import com.google.firebase.auth.FirebaseAuth
 import com.ladrope.venpix.R
 import com.twitter.sdk.android.core.Twitter
+import io.branch.referral.Branch
+import io.branch.referral.BranchError
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONObject
 import java.util.*
 
 
@@ -29,11 +34,23 @@ class MainActivity : AppCompatActivity() {
     lateinit var dotsLayout: LinearLayout
     private val timer = Timer()
 
+    private var mAuth: FirebaseAuth? = null
+
     var textList = arrayListOf<String>("Never let great moments slide pass you","Create an album and share your link with friends", "Get all your pictures in one vault and only you and your friends can see it")
     var index = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        mAuth = FirebaseAuth.getInstance()
+
+        if(mAuth?.currentUser == null){
+
+        }else{
+            var homeIntent = Intent(this, home::class.java)
+            startActivity(homeIntent)
+        }
 
         //facebook sdk
         FacebookSdk.sdkInitialize(getApplicationContext())
@@ -133,6 +150,24 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         timer.cancel()
         timer.purge()
+    }
+
+    public override fun onStart() {
+        super.onStart()
+
+        Branch.getInstance().initSession(object : Branch.BranchReferralInitListener{
+            override fun onInitFinished(referringParams: JSONObject, error: BranchError?) {
+                if (error == null) {
+                    Log.e("BRANCH SDK", referringParams.toString())
+                } else {
+                    Log.e("BRANCH SDK", error.message)
+                }
+            }
+        }, this.intent.data, this)
+    }
+
+    public override fun onNewIntent(intent: Intent) {
+        this.intent = intent
     }
 
 }

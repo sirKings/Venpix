@@ -1,10 +1,11 @@
 package com.ladrope.venpix.controller
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.ImageButton
-import android.widget.ImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.ladrope.venpix.R
@@ -16,10 +17,6 @@ import kotlinx.android.synthetic.main.activity_home.*
 class home : AppCompatActivity() {
 
     var editButton: ImageButton? = null
-    var createAlbum: ImageView? = null
-    var createMoments: ImageView? = null
-    var myAlbums: ImageView? = null
-    var myMoment: ImageView? = null
     val colorInt: Int = Color.parseColor("#252231")
 
     private var mAuth: FirebaseAuth? = null
@@ -32,9 +29,7 @@ class home : AppCompatActivity() {
         editButton = editProfile
         editButton?.setColorFilter(colorInt)
 
-        myMoment = myMoments
 
-        createAlbum = createAlbums
     }
 
     public override fun onStart() {
@@ -56,4 +51,23 @@ class home : AppCompatActivity() {
         }
 
     }
+
+    fun createAlbum(view: View){
+        var createAlbumIntent = Intent(this@home, create_album::class.java)
+        startActivity(createAlbumIntent)
+    }
+
+    fun captureMoments(view: View){
+
+    }
+
+    fun myAlbums(view: View){
+
+    }
+
+    fun myMoments( view: View){
+
+    }
+
+
 }

@@ -47,14 +47,12 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="16dp"
         android:contentDescription="@string/capture_moment_button"
-        android:foreground="#b0000000"
-        android:foregroundTint="#b0000000"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/myMoments"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toTopOf="@+id/createAlbum"
+        app:layout_constraintTop_toTopOf="@+id/createAlbums"
         app:srcCompat="@drawable/photo" />
 
     <ImageView
@@ -63,9 +61,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="76dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:contentDescription="@string/my_moments_button"
-        android:foreground="#b0000000"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="16:9"
@@ -81,7 +77,6 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/create_new_album_button"
-        android:foreground="#b0000000"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/myAlbums"
         app:layout_constraintDimensionRatio="w,9:16"
@@ -95,11 +90,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
         android:contentDescription="@string/my_albums_button"
-        android:foreground="#b0000000"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/myMoments"
         app:layout_constraintDimensionRatio="16:9"
@@ -115,7 +107,7 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/createAlbumButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
@@ -123,6 +115,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
+        android:onClick="createAlbum"
         android:text="@string/create_new_album"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
@@ -134,7 +127,7 @@
         app:layout_constraintTop_toTopOf="@+id/createAlbums" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/captureMomentsButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
@@ -142,6 +135,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
+        android:onClick="captureMoments"
         android:text="@string/capture_moments"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
@@ -153,7 +147,7 @@
         app:layout_constraintTop_toTopOf="@+id/captureMoments" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/myAlbumsButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
@@ -161,6 +155,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
+        android:onClick="myAlbums"
         android:text="@string/my_albums"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
@@ -172,7 +167,7 @@
         app:layout_constraintTop_toTopOf="@+id/myAlbums" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/myMomentsButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
@@ -180,6 +175,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
+        android:onClick="myMoments"
         android:text="@string/my_moments"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
