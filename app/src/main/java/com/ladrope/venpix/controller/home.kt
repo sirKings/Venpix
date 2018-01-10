@@ -62,7 +62,8 @@ class home : AppCompatActivity() {
     }
 
     fun myAlbums(view: View){
-
+        var myAlbumIntent = Intent(this@home, MyAlbums::class.java)
+        startActivity(myAlbumIntent)
     }
 
     fun myMoments( view: View){

@@ -14,6 +14,7 @@ import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.ladrope.venpix.R
 import com.ladrope.venpix.services.Album
+import com.ladrope.venpix.services.addAlbum
 import io.branch.indexing.BranchUniversalObject
 import io.branch.referral.Branch
 import io.branch.referral.BranchError
@@ -39,7 +40,9 @@ class create_album: AppCompatActivity() {
     val buo = BranchUniversalObject()
 
     private var mAuth: FirebaseAuth? = null
-
+    private var uid: String? = null
+    private var title: String? = null
+    private var desc: String? = null
     private var progressBar: ProgressBar? = null
 
 
@@ -59,6 +62,7 @@ class create_album: AppCompatActivity() {
         next = btn_next
 
         mAuth = FirebaseAuth.getInstance()
+        uid = mAuth?.uid
 
         progressBar = progressBar3
         progressBar?.visibility = View.GONE
@@ -128,8 +132,8 @@ class create_album: AppCompatActivity() {
     }
 
     fun createOrder() {
-        val title = album_name.text.toString()
-        val desc = albumDescription.text.toString()
+        title = album_name.text.toString()
+        desc = albumDescription.text.toString()
 
         if(title == ""){
             val titleValidation: Int = resources.getIdentifier("titleValidation", "string", packageName)
@@ -150,12 +154,11 @@ class create_album: AppCompatActivity() {
                 //purchase a store value
 
                 //create an album
-                startLogin(false)
-                val uid = mAuth?.uid
-                val albumKey = createAlbum(title, desc, uid)
+                val albumKey = createAlbum()
 
                 //create Link
-                createLink(title, desc, plan, albumKey)
+                createLink(albumKey)
+
             }
         }
     }
@@ -199,7 +202,9 @@ class create_album: AppCompatActivity() {
         premuimCard.setCardBackgroundColor(Color.WHITE)
     }
 
-    fun createLink(title: String, desc: String, plan: Int?, key: String){
+    fun createLink(key: String){
+        val title : String = title.toString()
+
         buo.setCanonicalIdentifier(key)
                 .setTitle(title)
                 .setContentDescription(desc)
@@ -215,7 +220,7 @@ class create_album: AppCompatActivity() {
                 .addControlParameter("custom_random", "hello")
 
 
-        var ss =  ShareSheetStyle(this@create_album, "Check this out!", "This stuff is awesome: ")
+        val ss =  ShareSheetStyle(this@create_album, "Check this out!", "This stuff is awesome: ")
             ss.setCopyUrlStyle(resources.getDrawable(android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
                 .setMoreOptionStyle(resources.getDrawable(android.R.drawable.ic_menu_search), "Show more")
                 .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
@@ -229,22 +234,32 @@ class create_album: AppCompatActivity() {
 
         buo.showShareSheet(this, lp, ss, object : Branch.BranchLinkShareListener {
             override fun onShareLinkDialogLaunched() {}
-            override fun onShareLinkDialogDismissed() {}
-            override fun onLinkShareResponse(sharedLink: String, sharedChannel: String, error: BranchError) {}
+            override fun onShareLinkDialogDismissed() {
+
+            }
+            override fun onLinkShareResponse(sharedLink: String, sharedChannel: String, error: BranchError) {
+
+            }
             override fun onChannelSelected(channelName: String) {}
         })
     }
 
-    fun createAlbum(title: String, desc: String, uid: String?): String{
-        val album = Album(title, desc, uid)
+    fun createAlbum(): String{
+        val userDisplayName = mAuth?.currentUser?.displayName
+
+        val album = Album(title,desc,uid, userDisplayName)
+        startLogin(false)
         val albumKey = com.ladrope.venpix.services.createAlbum(album)
+        addAlbum(albumKey, uid)
         startLogin(true)
         return albumKey
     }
 
     private fun startLogin(status: Boolean){
+        Log.e("Progressbar", status.toString())
 
         if(status == false){
+            progressBar?.bringToFront()
             progressBar?.visibility = View.VISIBLE
         }else {
             progressBar?.visibility = View.GONE
@@ -254,4 +269,7 @@ class create_album: AppCompatActivity() {
         val prev = btn_skip
         prev.isClickable = status
     }
+
+
+
 }

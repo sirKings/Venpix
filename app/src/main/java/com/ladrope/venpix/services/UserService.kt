@@ -10,11 +10,10 @@ class User(public val username: String?, public val email: String?){
     open fun User() {}
 }
 
+val database = FirebaseDatabase.getInstance()
+val userRef = database.getReference("users")
+
 fun createUser(user: User, uid: String?){
-
-
-    val database = FirebaseDatabase.getInstance()
-    val userRef = database.getReference("users")
 
     userRef.addListenerForSingleValueEvent(object:ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
@@ -38,3 +37,20 @@ fun updateUser() {
 
 }
 
+fun addMoment(uid: String?, moment: Moment, key: String) {
+    userRef.child(uid).child("moments").child(key).setValue(moment)
+}
+
+fun addAlbum(albumKey: String, uid: String?) {
+    val key = userRef.child(uid).child("albums").push().key
+
+    userRef.child(uid).child("albums").child(key).setValue(albumKey)
+}
+
+fun removeMoment() {
+
+}
+
+fun removeAlbum() {
+
+}

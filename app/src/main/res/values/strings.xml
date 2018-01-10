@@ -63,6 +63,8 @@
     <string name="unlimited">Unlimited</string>
     <string name="titleValidation">Please enter album name</string>
     <string name="descValidation">Please enter album description</string>
+    <string name="my_albums_title">My Albums</string>
+    <string name="albumimage">albumImage</string>
 
 
 </resources>

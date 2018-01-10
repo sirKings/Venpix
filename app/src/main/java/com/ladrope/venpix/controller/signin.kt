@@ -3,6 +3,7 @@ package com.ladrope.venpix.controller
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -22,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.ladrope.venpix.R
+import com.ladrope.venpix.R.id.home
 import com.ladrope.venpix.services.User
 import com.ladrope.venpix.services.createUser
 import com.ladrope.venpix.utilities.RC_SIGN_IN
@@ -117,7 +119,7 @@ class signin : AppCompatActivity() {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             println("signInWithEmail:success")
-                            var currentUser = mAuth?.currentUser
+                            val currentUser = mAuth?.currentUser
                             val newUser = User(currentUser?.displayName, currentUser?.email)
                             createUser(newUser,currentUser?.uid)
                             startLogin(true)
@@ -126,6 +128,7 @@ class signin : AppCompatActivity() {
                             // If sign in fails, display a message to the user.
                             println("signInWithEmail:failure")
                             startLogin(true)
+                            Log.e("Error", "")
                             Toast.makeText(this@signin, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show()
                             //updateUI(null)

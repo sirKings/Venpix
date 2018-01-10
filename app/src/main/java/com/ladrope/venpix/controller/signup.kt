@@ -125,7 +125,7 @@ class signup : AppCompatActivity() {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     println("signUpWithEmail:success")
-                                    var currentUser = mAuth?.currentUser
+                                    val currentUser = mAuth?.currentUser
                                     val profileUpdates = UserProfileChangeRequest.Builder()
                                             .setDisplayName(name).build()
 
