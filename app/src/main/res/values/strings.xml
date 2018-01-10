@@ -65,6 +65,7 @@
     <string name="descValidation">Please enter album description</string>
     <string name="my_albums_title">My Albums</string>
     <string name="albumimage">albumImage</string>
+    <string name="moment_image">moment image</string>
 
 
 </resources>

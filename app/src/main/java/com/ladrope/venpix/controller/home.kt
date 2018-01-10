@@ -62,13 +62,14 @@ class home : AppCompatActivity() {
     }
 
     fun myAlbums(view: View){
-        var myAlbumIntent = Intent(this@home, MyAlbums::class.java)
+        val myAlbumIntent = Intent(this@home, MyAlbums::class.java)
         startActivity(myAlbumIntent)
     }
 
     fun myMoments( view: View){
-
+        val myMomentsIntent = Intent(this@home, MyMoments::class.java)
+        myMomentsIntent.putExtra("albumTitle", "My Momments")
+        startActivity(myMomentsIntent)
     }
-
 
 }

@@ -31,7 +31,7 @@ class MyAlbums : AppCompatActivity() {
 
         //create dummy data
         for (i in 0..9){
-            val album = Album("name"+i, "long storeu dhbc  ueehdb  xhdbddn nd dhdbn", "helloe", "Kingso"+i)
+            val album = Album("name"+i, "long stodhdh fhfhf hskwyedbdhfh hdbdhd hdbd", "helloe", "Kingso"+i)
             albumList?.add(album)
         }
 

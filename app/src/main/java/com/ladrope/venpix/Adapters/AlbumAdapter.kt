@@ -1,6 +1,8 @@
 package com.ladrope.venpix.Adapters
 
 import android.content.Context
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.ladrope.venpix.R
+import com.ladrope.venpix.controller.MyMoments
 import com.ladrope.venpix.services.Album
 import com.squareup.picasso.Picasso
 
@@ -39,8 +42,20 @@ class AlbumAdapter(private val list: ArrayList<Album>, private val context: Cont
 
             albumTitle.text = album.albumTitle
             albumCreator.text = album.album_creator
-            albumDesc.text = album.albumDesc?.slice(0..20)
-            Picasso.with(context).load(R.drawable.garden).into(albumLayout)
+
+            if(album.albumDesc!!.length > 20){
+
+                albumDesc.text = album.albumDesc.slice(0..20) + "..."
+            }else{
+                albumDesc.text = album.albumDesc
+            }
+            Picasso.with(context).load(R.drawable.garden).placeholder(R.drawable.progress_animation).into(albumLayout)
+
+            itemView.setOnClickListener {
+                var momentIntent = Intent(context, MyMoments::class.java)
+                momentIntent.putExtra("albumTitle", albumTitle.text.toString())
+                startActivity(context, momentIntent, null)
+            }
         }
     }
 
