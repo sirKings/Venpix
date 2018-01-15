@@ -270,7 +270,8 @@ class create_album: AppCompatActivity() {
             if(task.isSuccessful){
                 Log.e("Link", key)
                 createLink(key)
-                addAlbum(key, uid)
+                album.albumKey = key
+                addAlbum(uid!!, album)
                 progressDialog.dismiss()
             }
         }

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.database.FirebaseDatabase
 import com.ladrope.venpix.Adapters.MomentAdapter
 import com.ladrope.venpix.R
 import com.ladrope.venpix.model.Moment
@@ -13,30 +15,39 @@ class MyMoments : AppCompatActivity() {
 
     var adapter: MomentAdapter? = null
     var layoutManager: RecyclerView.LayoutManager? = null
-    var momentList: ArrayList<Moment>? = null
+    var options: FirebaseRecyclerOptions<Moment>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_moments)
 
-        var title = intent.extras.get("albumTitle")
+        val title = intent.extras.get("albumTitle")
+        val albumKey = intent.extras.get("albumKey")
 
         albumTitle.text = title.toString()
 
-        momentList = ArrayList<Moment>()
+        val database = FirebaseDatabase.getInstance()
+        val query = database.getReference().child("albums").child(albumKey.toString()).child("moments")
 
-        adapter = MomentAdapter(momentList!!, this)
+        options = FirebaseRecyclerOptions.Builder<Moment>()
+                .setQuery(query, Moment::class.java)
+                .build()
+
+        adapter = MomentAdapter(options!!, this)
         layoutManager = GridLayoutManager(this, 4)
 
         moment_list.layoutManager = layoutManager
         moment_list.adapter = adapter
 
-        //create dummy data
-        for (i in 0..9){
-            val moment = Moment("whatever", "i dont care", "http://www.informationng.com/wp-content/uploads/2012/04/563128_276441909116151_134391599987850_631577_2067204872_n.jpg", "hello")
-            momentList?.add(moment)
-        }
+    }
 
-        adapter?.notifyDataSetChanged()
+    override fun onStart() {
+        super.onStart()
+        adapter?.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter?.stopListening()
     }
 }

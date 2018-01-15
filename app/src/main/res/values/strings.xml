@@ -1,10 +1,10 @@
 <resources>
 
-    <string name="facebook_app_id">1529381790486231</string>
-    <string name="fb_login_protocol_scheme">fb1529381790486231</string>
+    <string name="facebook_app_id" translatable="false">1529381790486231</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb1529381790486231</string>
 
-    <string name="com.twitter.sdk.android.CONSUMER_KEY">CNa7zcjO1X7FJmfCdcKzmEKCP</string>
-    <string name="com.twitter.sdk.android.CONSUMER_SECRET">SB7FMPkxQE4L0ttaE5a6jvCCa7xVQPe6LHl3Qo2YIixAcdEhLi
+    <string name="com.twitter.sdk.android.CONSUMER_KEY" translatable="false">CNa7zcjO1X7FJmfCdcKzmEKCP</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET" translatable="false">SB7FMPkxQE4L0ttaE5a6jvCCa7xVQPe6LHl3Qo2YIixAcdEhLi
 </string>
 
 

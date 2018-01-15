@@ -11,8 +11,9 @@ class Album() {
     var image: String? = null
     var created_at: Long? = null
     var event_date: Long? = null
+    var albumKey: String? = null
 
-    constructor(albumTitle: String, albumDesc: String, creatorId: String, creatorName: String, created_at: Long, event_date: Long, image: String): this(){
+    constructor(albumTitle: String, albumDesc: String, creatorId: String, creatorName: String, created_at: Long, event_date: Long, image: String, albumKey: String): this(){
         this.albumDesc = albumDesc
         this.albumTitle = albumTitle
         this.creatorId = creatorId
@@ -20,6 +21,7 @@ class Album() {
         this.image = image
         this.created_at = created_at
         this.event_date = event_date
+        this.albumKey = albumKey
     }
 }
 
