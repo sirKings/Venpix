@@ -1,19 +1,20 @@
 package com.ladrope.venpix.services
 
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.ladrope.venpix.model.Moment
 
 /**
  * Created by USER on 12/17/17.
  */
-@IgnoreExtraProperties
-class User(public val username: String?, public val email: String?){
-    open fun User() {}
-}
+
 
 val database = FirebaseDatabase.getInstance()
 val userRef = database.getReference("users")
 
-fun createUser(user: User, uid: String?){
+fun createUser(user: com.ladrope.venpix.model.User, uid: String?){
 
     userRef.addListenerForSingleValueEvent(object:ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {

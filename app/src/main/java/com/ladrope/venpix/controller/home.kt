@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
 import com.ladrope.venpix.R
 import com.ladrope.venpix.utilities.LetterAvatar
 import com.squareup.picasso.Picasso
@@ -18,6 +19,7 @@ class home : AppCompatActivity() {
 
     var editButton: ImageButton? = null
     val colorInt: Int = Color.parseColor("#252231")
+    var mDatabase: DatabaseReference? = null
 
     private var mAuth: FirebaseAuth? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +27,8 @@ class home : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         mAuth = FirebaseAuth.getInstance()
+
+        mDatabase = FirebaseDatabase.getInstance().reference.child("users").child(mAuth?.uid)
 
         editButton = editProfile
         editButton?.setColorFilter(colorInt)
@@ -40,20 +44,54 @@ class home : AppCompatActivity() {
     }
 
     fun updateUI(user: FirebaseUser?){
-        if(user?.photoUrl != null){
-            Picasso.with(this).load(user?.photoUrl).into(profilePicture)
-            username.text = user?.displayName
-        }else {
-            username.text = user?.displayName
-            val initial = user?.displayName?.get(0)
+        mDatabase!!.addValueEventListener(object : ValueEventListener {
 
-            profilePicture.setImageDrawable(LetterAvatar(this, colorInt, initial, 15))
-        }
+            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                val displayName = dataSnapshot!!.child("userName").value.toString()
+                val image = dataSnapshot!!.child("userImage").value.toString()
+                val coverImage = dataSnapshot!!.child("coverImage").value.toString()
+
+                username.text = displayName
+
+                if (image!!.equals("default")) {
+                    val initial = user?.displayName?.get(0)
+                    profilePicture.setImageDrawable(LetterAvatar(this@home, colorInt, initial, 15))
+                }else{
+                    Picasso.with(this@home)
+                            .load(image)
+                            .placeholder(R.drawable.profile_img)
+                            .into(profilePicture)
+                }
+
+                if (coverImage!!.equals("default")) {
+                    Picasso.with(this@home)
+                            .load(R.drawable.garden)
+                            .into(coverPicture)
+                }else{
+                    Picasso.with(this@home)
+                            .load(coverImage)
+                            .placeholder(R.drawable.garden)
+                            .into(coverPicture)
+                }
+
+
+            }
+
+            override fun onCancelled(databaseErrorSnapshot: DatabaseError?) {
+
+            }
+
+        })
 
     }
 
+    fun settings(view: View){
+        val settingIntent = Intent(this@home, Settings::class.java)
+        startActivity(settingIntent)
+    }
+
     fun createAlbum(view: View){
-        var createAlbumIntent = Intent(this@home, create_album::class.java)
+        val createAlbumIntent = Intent(this@home, create_album::class.java)
         startActivity(createAlbumIntent)
     }
 

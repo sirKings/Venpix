@@ -23,8 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.ladrope.venpix.R
-import com.ladrope.venpix.R.id.home
-import com.ladrope.venpix.services.User
+import com.ladrope.venpix.model.User
 import com.ladrope.venpix.services.createUser
 import com.ladrope.venpix.utilities.RC_SIGN_IN
 import com.twitter.sdk.android.core.Callback
@@ -120,7 +119,13 @@ class signin : AppCompatActivity() {
                             // Sign in success, update UI with the signed-in user's information
                             println("signInWithEmail:success")
                             val currentUser = mAuth?.currentUser
-                            val newUser = User(currentUser?.displayName, currentUser?.email)
+                            var photoUrl = ""
+                            if (currentUser!!.photoUrl == null){
+                                photoUrl = "default"
+                            }else{
+                                photoUrl = currentUser!!.photoUrl.toString()
+                            }
+                            val newUser = User(currentUser!!.displayName!!, currentUser!!.email!!, photoUrl)
                             createUser(newUser,currentUser?.uid)
                             startLogin(true)
                              goHome()
@@ -158,7 +163,7 @@ class signin : AppCompatActivity() {
     }
 
     private fun goHome(){
-       var homeIntent = Intent(this, home::class.java)
+       var homeIntent = Intent(this, com.ladrope.venpix.controller.home::class.java)
         startActivity(homeIntent)
     }
 
@@ -206,7 +211,7 @@ class signin : AppCompatActivity() {
                         println("signInWithCredential:success")
                         startLogin(true)
                         var currentUser = mAuth?.currentUser
-                        val newUser = User(currentUser?.displayName, currentUser?.email)
+                        val newUser = User(currentUser?.displayName, currentUser?.email, currentUser?.photoUrl.toString())
                         createUser(newUser,currentUser?.uid)
                         goHome()
                     } else {
@@ -239,7 +244,7 @@ class signin : AppCompatActivity() {
                         println("signInWithCredential:success")
                         startLogin(true)
                         var currentUser = mAuth?.currentUser
-                        val newUser = User(currentUser?.displayName, currentUser?.email)
+                        val newUser = User(currentUser?.displayName, currentUser?.email, currentUser?.photoUrl.toString())
                         createUser(newUser,currentUser?.uid)
                         goHome()
                     } else {
@@ -279,7 +284,7 @@ class signin : AppCompatActivity() {
                         println("signInWithCredential:success")
                         startLogin(true)
                         var currentUser = mAuth?.currentUser
-                        val newUser = User(currentUser?.displayName, currentUser?.email)
+                        val newUser = User(currentUser?.displayName, currentUser?.email, currentUser?.photoUrl.toString())
                         createUser(newUser,currentUser?.uid)
                         goHome()
                     } else {

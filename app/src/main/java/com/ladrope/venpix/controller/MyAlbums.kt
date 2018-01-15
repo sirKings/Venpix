@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.ladrope.venpix.Adapters.AlbumAdapter
 import com.ladrope.venpix.R
-import com.ladrope.venpix.services.Album
+import com.ladrope.venpix.model.Album
 import kotlinx.android.synthetic.main.activity_my_albums.*
 
 class MyAlbums : AppCompatActivity() {
@@ -31,7 +31,7 @@ class MyAlbums : AppCompatActivity() {
 
         //create dummy data
         for (i in 0..9){
-            val album = Album("name"+i, "long stodhdh fhfhf hskwyedbdhfh hdbdhd hdbd", "helloe", "Kingso"+i)
+            val album = Album("name"+i, "long stodhdh fhfhf hskwyedbdhfh hdbdhd hdbd", "helloe", "Kingso"+i, 2664646, 36465577, "hhdhdhdh")
             albumList?.add(album)
         }
 

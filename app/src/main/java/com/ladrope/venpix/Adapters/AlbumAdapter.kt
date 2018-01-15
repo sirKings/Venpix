@@ -11,7 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.ladrope.venpix.R
 import com.ladrope.venpix.controller.MyMoments
-import com.ladrope.venpix.services.Album
+import com.ladrope.venpix.model.Album
 import com.squareup.picasso.Picasso
 
 /**
@@ -41,11 +41,11 @@ class AlbumAdapter(private val list: ArrayList<Album>, private val context: Cont
             val albumLayout = itemView.findViewById<ImageView>(R.id.albumLayout)
 
             albumTitle.text = album.albumTitle
-            albumCreator.text = album.album_creator
+            albumCreator.text = album.creatorName
 
             if(album.albumDesc!!.length > 20){
 
-                albumDesc.text = album.albumDesc.slice(0..20) + "..."
+                albumDesc.text = album.albumDesc!!.slice(0..20) + "..."
             }else{
                 albumDesc.text = album.albumDesc
             }

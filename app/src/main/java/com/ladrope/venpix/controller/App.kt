@@ -1,6 +1,7 @@
 package com.ladrope.venpix.controller
 
 import android.app.Application
+import com.cloudinary.android.MediaManager
 import io.branch.referral.Branch
 
 /**
@@ -13,5 +14,8 @@ class App : Application() {
 
         // Initialize the Branch object
         Branch.getAutoInstance(this)
+
+        // Cloudinary Initialization
+        MediaManager.init(this)
     }
 }

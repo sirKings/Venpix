@@ -1,5 +1,6 @@
 package com.ladrope.venpix.controller
 
+import android.app.ProgressDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,10 +11,15 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Html
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.ladrope.venpix.R
-import com.ladrope.venpix.services.Album
+import com.ladrope.venpix.model.Album
 import com.ladrope.venpix.services.addAlbum
 import io.branch.indexing.BranchUniversalObject
 import io.branch.referral.Branch
@@ -26,6 +32,7 @@ import kotlinx.android.synthetic.main.activity_create_album.*
 import kotlinx.android.synthetic.main.ca_add_choose_plan.*
 import kotlinx.android.synthetic.main.ca_add_description.*
 import kotlinx.android.synthetic.main.ca_add_title.*
+import java.util.*
 
 
 class create_album: AppCompatActivity() {
@@ -43,7 +50,6 @@ class create_album: AppCompatActivity() {
     private var uid: String? = null
     private var title: String? = null
     private var desc: String? = null
-    private var progressBar: ProgressBar? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,9 +69,6 @@ class create_album: AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
         uid = mAuth?.uid
-
-        progressBar = progressBar3
-        progressBar?.visibility = View.GONE
     }
 
     internal inner class ViewPagerAdapter(manager:FragmentManager): FragmentPagerAdapter(manager) {
@@ -154,10 +157,7 @@ class create_album: AppCompatActivity() {
                 //purchase a store value
 
                 //create an album
-                val albumKey = createAlbum()
-
-                //create Link
-                createLink(albumKey)
+                createAlbum()
 
             }
         }
@@ -204,13 +204,14 @@ class create_album: AppCompatActivity() {
 
     fun createLink(key: String){
         val title : String = title.toString()
+        val desc: String = desc.toString()
 
         buo.setCanonicalIdentifier(key)
                 .setTitle(title)
                 .setContentDescription(desc)
                 .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
                 .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
-                .setContentMetadata(ContentMetadata().addCustomMetadata("plan", plan?.toString()))
+                .setContentMetadata(ContentMetadata().addCustomMetadata("plan", plan.toString()))
 
         val lp = LinkProperties()
                 lp.setChannel("facebook")
@@ -244,30 +245,35 @@ class create_album: AppCompatActivity() {
         })
     }
 
-    fun createAlbum(): String{
+    fun createAlbum(){
+
+        var progressDialog = ProgressDialog(this)
+        progressDialog.setTitle("Creating your Link")
+        progressDialog.setCanceledOnTouchOutside(false)
+        progressDialog.show()
+
         val userDisplayName = mAuth?.currentUser?.displayName
 
-        val album = Album(title,desc,uid, userDisplayName)
-        startLogin(false)
-        val albumKey = com.ladrope.venpix.services.createAlbum(album)
-        addAlbum(albumKey, uid)
-        startLogin(true)
-        return albumKey
-    }
+        val album = Album()
+        album.creatorName = userDisplayName
+        album.albumTitle = title
+        album.albumDesc = desc
+        album.creatorId = uid
+        album.created_at = Calendar.getInstance().timeInMillis
 
-    private fun startLogin(status: Boolean){
-        Log.e("Progressbar", status.toString())
+        val albumRef = FirebaseDatabase.getInstance().reference.child("albums")
 
-        if(status == false){
-            progressBar?.bringToFront()
-            progressBar?.visibility = View.VISIBLE
-        }else {
-            progressBar?.visibility = View.GONE
+        val key = albumRef.push().key
+
+        albumRef.child(key).setValue(album).addOnCompleteListener {
+            task: Task<Void> ->
+            if(task.isSuccessful){
+                Log.e("Link", key)
+                createLink(key)
+                addAlbum(key, uid)
+                progressDialog.dismiss()
+            }
         }
-
-        next.isClickable = status
-        val prev = btn_skip
-        prev.isClickable = status
     }
 
 

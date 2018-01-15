@@ -15,7 +15,6 @@ import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
 import android.widget.ViewSwitcher
-import com.cloudinary.android.MediaManager
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.auth.FirebaseAuth
@@ -50,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         }else{
             var homeIntent = Intent(this, home::class.java)
             startActivity(homeIntent)
+            finish()
         }
 
         //facebook sdk
@@ -59,9 +59,6 @@ class MainActivity : AppCompatActivity() {
         //Twitter initialization
         Twitter.initialize(this)
 
-
-        // Cloudinary Initialization
-        MediaManager.init(this)
 
         textSwitcher = hintSwitcher
         dotsLayout = layoutDots

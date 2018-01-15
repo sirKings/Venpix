@@ -22,7 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.ladrope.venpix.R
-import com.ladrope.venpix.services.User
+import com.ladrope.venpix.model.User
 import com.ladrope.venpix.services.createUser
 import com.ladrope.venpix.utilities.RC_SIGN_IN
 import com.ladrope.venpix.utilities.isValidEmail
@@ -130,9 +130,9 @@ class signup : AppCompatActivity() {
                                             .setDisplayName(name).build()
 
                                     currentUser?.updateProfile(profileUpdates)
-                                    startLogin(true)
-                                    val newUser = User(currentUser?.displayName, currentUser?.email)
+                                    val newUser = User(name, currentUser?.email, "default")
                                     createUser(newUser,currentUser?.uid)
+                                    startLogin(true)
                                     goHome()
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -226,9 +226,9 @@ class signup : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         println("signInWithCredential:success")
                         startLogin(true)
-                        val user = mAuth?.getCurrentUser()
-                        val newUser = User(user?.displayName, user?.email)
-                        createUser(newUser, user?.uid)
+                        var currentUser = mAuth?.currentUser
+                        val newUser = User(currentUser?.displayName, currentUser?.email, currentUser?.photoUrl.toString())
+                        createUser(newUser,currentUser?.uid)
                         goHome()
                     } else {
                         // If sign in fails, display a message to the user.
@@ -260,9 +260,9 @@ class signup : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         println("signInWithCredential:success")
                         startLogin(true)
-                        val user = mAuth?.getCurrentUser()
-                        val newUser = User(user?.displayName, user?.email)
-                        createUser(newUser, user?.uid)
+                        var currentUser = mAuth?.currentUser
+                        val newUser = User(currentUser?.displayName, currentUser?.email, currentUser?.photoUrl.toString())
+                        createUser(newUser,currentUser?.uid)
                         goHome()
                     } else {
                         // If sign in fails, display a message to the user.
@@ -292,9 +292,9 @@ class signup : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         println("signInWithCredential:success")
                         startLogin(true)
-                        val user = mAuth?.getCurrentUser()
-                        val newUser = User(user?.displayName, user?.email)
-                        createUser(newUser, user?.uid)
+                        var currentUser = mAuth?.currentUser
+                        val newUser = User(currentUser?.displayName, currentUser?.email, currentUser?.photoUrl.toString())
+                        createUser(newUser,currentUser?.uid)
                         //updateUI(user)
                         goHome()
                     } else {

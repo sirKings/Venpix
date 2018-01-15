@@ -6,7 +6,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.ladrope.venpix.Adapters.MomentAdapter
 import com.ladrope.venpix.R
-import com.ladrope.venpix.services.Moment
+import com.ladrope.venpix.model.Moment
 import kotlinx.android.synthetic.main.activity_my_moments.*
 
 class MyMoments : AppCompatActivity() {
@@ -33,7 +33,7 @@ class MyMoments : AppCompatActivity() {
 
         //create dummy data
         for (i in 0..9){
-            val moment = Moment("whatever", "i dont care", R.drawable.paschal, "hello")
+            val moment = Moment("whatever", "i dont care", "http://www.informationng.com/wp-content/uploads/2012/04/563128_276441909116151_134391599987850_631577_2067204872_n.jpg", "hello")
             momentList?.add(moment)
         }
 

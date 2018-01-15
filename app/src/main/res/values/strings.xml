@@ -66,6 +66,13 @@
     <string name="my_albums_title">My Albums</string>
     <string name="albumimage">albumImage</string>
     <string name="moment_image">moment image</string>
+    <string name="save">Save</string>
+    <string name="change_password">Change Password</string>
+    <string name="logout">Logout</string>
+    <string name="change_profile_picture">change profile picture</string>
+    <string name="enterOldpassword">Enter old Password</string>
+    <string name="enterNewPassword">Enter New Password</string>
+    <string name="confirmNewpass">Confirm new password</string>
 
 
 </resources>

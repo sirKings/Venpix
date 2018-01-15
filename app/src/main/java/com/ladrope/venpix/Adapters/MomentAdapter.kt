@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.ladrope.venpix.R
-import com.ladrope.venpix.services.Moment
+import com.ladrope.venpix.model.Moment
 import com.squareup.picasso.Picasso
 
 /**
