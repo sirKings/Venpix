@@ -96,7 +96,8 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".controller.UserMoments"></activity>
+        <activity android:name=".controller.UserMoments" />
+        <activity android:name=".controller.moment_fullscreen"></activity>
     </application>
 
 </manifest>

@@ -2,7 +2,6 @@ package com.ladrope.venpix.Adapters
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -82,7 +81,7 @@ class AlbumAdapter(options: FirebaseRecyclerOptions<Album>, private val context:
                 var momentIntent = Intent(context, MyMoments::class.java)
                 momentIntent.putExtra("albumTitle", albumTitle.text.toString())
                 momentIntent.putExtra("albumKey", album.albumKey)
-                startActivity(context, momentIntent, null)
+                context.startActivity(momentIntent)
             }
         }
     }

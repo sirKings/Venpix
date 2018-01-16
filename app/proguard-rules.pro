@@ -35,3 +35,6 @@
 -keepclassmembers class com.ladrope.models.** {
   *;
 }
+
+-keep class com.lsjwzh.widget.recyclerviewpager.**
+-dontwarn com.lsjwzh.widget.recyclerviewpager.**

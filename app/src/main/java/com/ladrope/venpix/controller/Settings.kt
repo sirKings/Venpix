@@ -218,6 +218,10 @@ class Settings : AppCompatActivity() {
         }
 
         Toast.makeText(this, "Updates successful", Toast.LENGTH_SHORT).show()
+        val homeIntent = Intent(this@Settings, home::class.java)
+        startActivity(homeIntent)
+        finish()
+        
     }
 
     fun settingsChangePassword(view: View){
