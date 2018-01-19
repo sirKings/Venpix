@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:elevation="@dimen/com_facebook_auth_dialog_corner_radius_oversized"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_border"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/spinnerRowAlbumTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                tools:text="Album Title" />
+
+            <TextView
+                android:id="@+id/spinnerRowAlbumDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:gravity="center_horizontal"
+                 />
+
+            <TextView
+                android:id="@+id/spinnerRowAlbumCreator"
+                android:layout_width="match_parent"
+                android:textSize="18sp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                 />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>

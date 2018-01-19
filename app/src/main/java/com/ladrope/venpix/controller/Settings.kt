@@ -111,10 +111,11 @@ class Settings : AppCompatActivity() {
         //setup variable
         mImage = name
         //open gallery to get the picture
-        var galleryIntent = Intent()
+
+        val galleryIntent = Intent()
         galleryIntent.type = "image/*"
         galleryIntent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(galleryIntent, "Choose an image"), GALLERY_ID)
+        startActivityForResult(Intent.createChooser(galleryIntent, getString(R.string.chooseImage)), GALLERY_ID)
 
     }
 
@@ -160,7 +161,7 @@ class Settings : AppCompatActivity() {
                     }
 
                     override fun onError(requestId: String?, error: ErrorInfo?) {
-                        Toast.makeText(this@Settings,"Upload failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@Settings,getString(R.string.uploadFail), Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onStart(requestId: String?) {
@@ -174,11 +175,12 @@ class Settings : AppCompatActivity() {
                             mDatabase!!.updateChildren(updateObj)
                                         .addOnCompleteListener { task: Task<Void> ->
                                             if (task.isSuccessful) {
-                                                Toast.makeText(this@Settings, "Profile Image Saved!",
+                                                Toast.makeText(this@Settings, getString(R.string.uploadSucc),
                                                         Toast.LENGTH_LONG)
                                                         .show()
                                                         settingsSaveBtn.isClickable = true
                                                         mProgress?.visibility = View.GONE
+
                                             } else {
 
                                             }
@@ -187,12 +189,11 @@ class Settings : AppCompatActivity() {
                     }
 
                     override fun onProgress(requestId: String?, bytes: Long, totalBytes: Long) {
-
                     }
                 }
 
 
-                val requestId = MediaManager.get().upload(thumbFile).unsigned("kfmwfbua").option("public_id", mImage).callback(callback()).dispatch()
+                var requestid = MediaManager.get().upload(thumbFile).unsigned("kfmwfbua").option("public_id", System.currentTimeMillis().toString()).callback(callback()).dispatch()
 
 
 
@@ -217,7 +218,7 @@ class Settings : AppCompatActivity() {
             changeEmail(settingsEmail.text.toString())
         }
 
-        Toast.makeText(this, "Updates successful", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.uploadSucc), Toast.LENGTH_SHORT).show()
         val homeIntent = Intent(this@Settings, home::class.java)
         startActivity(homeIntent)
         finish()
@@ -251,19 +252,19 @@ class Settings : AppCompatActivity() {
                     val credential = EmailAuthProvider.getCredential(mEmail!!, oldPass)
                     mCurrentUser?.reauthenticate(credential)?.addOnCompleteListener {
                         mCurrentUser?.updatePassword(newPass)?.addOnCompleteListener {
-                            Toast.makeText(this, "Password Updated", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, getString(R.string.passUpdated), Toast.LENGTH_SHORT).show()
                             popupProgress.visibility = View.GONE
                             dialog?.dismiss()}
                                 ?.addOnFailureListener {
-                                    Toast.makeText(this,"Password update failed", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this,getString(R.string.passUpdateFail), Toast.LENGTH_SHORT).show()
                                     popupProgress.visibility = View.GONE
                                     dialog?.dismiss()}
                     }
                 }else{
-                    Toast.makeText(this, "Password does not match", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.passwordMatch), Toast.LENGTH_SHORT).show()
                 }
             }else{
-                Toast.makeText(this,"Please enter all details", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,getString(R.string.enterAll), Toast.LENGTH_SHORT).show()
             }
 
         }

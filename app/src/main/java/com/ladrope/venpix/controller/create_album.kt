@@ -1,5 +1,6 @@
 package com.ladrope.venpix.controller
 
+import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.graphics.Color
 import android.os.Bundle
@@ -11,10 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Html
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -32,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_create_album.*
 import kotlinx.android.synthetic.main.ca_add_choose_plan.*
 import kotlinx.android.synthetic.main.ca_add_description.*
 import kotlinx.android.synthetic.main.ca_add_title.*
+import kotlinx.android.synthetic.main.fragment_fragment_four.*
 import java.util.*
 
 
@@ -50,6 +49,7 @@ class create_album: AppCompatActivity() {
     private var uid: String? = null
     private var title: String? = null
     private var desc: String? = null
+    private var date: Long? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +59,9 @@ class create_album: AppCompatActivity() {
         val adapter = ViewPagerAdapter(getSupportFragmentManager())
         adapter.addFragment(FragmentOne())
         adapter.addFragment(FragmentTwo())
+        adapter.addFragment(FragmentFour())
         adapter.addFragment(FragmentThree())
+
         viewPager.offscreenPageLimit = 4
         viewPager.adapter = adapter
 
@@ -69,6 +71,7 @@ class create_album: AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
         uid = mAuth?.uid
+
     }
 
     internal inner class ViewPagerAdapter(manager:FragmentManager): FragmentPagerAdapter(manager) {
@@ -89,7 +92,7 @@ class create_album: AppCompatActivity() {
         Log.e("index", index.toString())
         if (index <= 0){
 
-        }else if(index == 2) {
+        }else if(index == 3) {
             next.text = getString(R.string.next)
             viewPager.currentItem = --index
             addBottomDots(index)
@@ -102,7 +105,7 @@ class create_album: AppCompatActivity() {
 
     fun next (view: View) {
         Log.e("index", index.toString())
-        if (index == 2){
+        if (index == 3){
             createOrder()
         }else if(index > mFragmentList.size - 2){
         }
@@ -115,6 +118,26 @@ class create_album: AppCompatActivity() {
             viewPager.currentItem = ++index
             addBottomDots(index)
         }
+
+    }
+
+    fun pickDate(view: View){
+
+        // Get Current Date
+        val c = Calendar.getInstance()
+        val mYear = c.get(Calendar.YEAR)
+        val mMonth = c.get(Calendar.MONTH)
+        val mDay = c.get(Calendar.DAY_OF_MONTH)
+        val datePickerDialog = DatePickerDialog(this,
+                object: DatePickerDialog.OnDateSetListener {
+                    override fun onDateSet(view:DatePicker, year:Int,
+                                  monthOfYear:Int, dayOfMonth:Int) {
+                        dateText.text = dayOfMonth.toString() + "-" + (monthOfYear + 1).toString() + "-" + year.toString()
+                        val calendar = GregorianCalendar(year, monthOfYear+1, dayOfMonth)
+                        date = calendar.timeInMillis
+                    }
+                }, mYear, mMonth, mDay)
+        datePickerDialog.show()
 
     }
 
@@ -131,7 +154,7 @@ class create_album: AppCompatActivity() {
             dotsLayout.addView(dots[i])
         }
         if (mFragmentList.size > 0)
-            dots[currentPage]?.setTextColor(Color.parseColor("#00bbd1"))
+            dots[currentPage]?.setTextColor(resources.getColor(R.color.colorAccent))
     }
 
     fun createOrder() {
@@ -139,26 +162,35 @@ class create_album: AppCompatActivity() {
         desc = albumDescription.text.toString()
 
         if(title == ""){
-            val titleValidation: Int = resources.getIdentifier("titleValidation", "string", packageName)
-            Toast.makeText(this@create_album, titleValidation, Toast.LENGTH_SHORT).show()
+
+            Toast.makeText(this@create_album, getString(R.string.titleValidation), Toast.LENGTH_SHORT).show()
             index = 0
             viewPager.currentItem = index
             addBottomDots(index)
             next.text = getString(R.string.next)
         }else{
             if (desc == ""){
-                val descValidation: Int = resources.getIdentifier("descValidation", "string", packageName)
-                Toast.makeText(this@create_album, descValidation, Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(this@create_album, getString(R.string.descValidation), Toast.LENGTH_SHORT).show()
                 index = 1
                 viewPager.currentItem = index
                 addBottomDots(index)
                 next.text = getString(R.string.next)
             }else {
-                //purchase a store value
 
-                //create an album
-                createAlbum()
+                if (date == null){
+                    Toast.makeText(this@create_album, getString(R.string.dateValidation), Toast.LENGTH_SHORT).show()
+                    index = 2
+                    viewPager.currentItem = index
+                    addBottomDots(index)
+                    next.text = getString(R.string.next)
 
+                }else{
+                    //purchase a store value
+
+                    //create an album
+                    createAlbum()
+                }
             }
         }
     }
@@ -205,13 +237,16 @@ class create_album: AppCompatActivity() {
     fun createLink(key: String){
         val title : String = title.toString()
         val desc: String = desc.toString()
+        val date: String = date.toString()
+        val plan: String = plan.toString()
 
         buo.setCanonicalIdentifier(key)
                 .setTitle(title)
                 .setContentDescription(desc)
                 .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
                 .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
-                .setContentMetadata(ContentMetadata().addCustomMetadata("plan", plan.toString()))
+                .setContentMetadata(ContentMetadata().addCustomMetadata("plan", plan))
+                .setContentMetadata(ContentMetadata().addCustomMetadata("date",date))
 
         val lp = LinkProperties()
                 lp.setChannel("facebook")
@@ -221,7 +256,7 @@ class create_album: AppCompatActivity() {
                 .addControlParameter("custom_random", "hello")
 
 
-        val ss =  ShareSheetStyle(this@create_album, "Check this out!", "This stuff is awesome: ")
+        val ss =  ShareSheetStyle(this@create_album, getString(R.string.capture), title +": "+ desc)
             ss.setCopyUrlStyle(resources.getDrawable(android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
                 .setMoreOptionStyle(resources.getDrawable(android.R.drawable.ic_menu_search), "Show more")
                 .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
@@ -276,7 +311,4 @@ class create_album: AppCompatActivity() {
             }
         }
     }
-
-
-
 }

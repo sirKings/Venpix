@@ -33,15 +33,12 @@ class home : AppCompatActivity() {
         editButton = editProfile
         editButton?.setColorFilter(colorInt)
 
-
-    }
-
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = mAuth?.currentUser
         updateUI(currentUser)
+
+
     }
+
 
     fun updateUI(user: FirebaseUser?){
         mDatabase!!.addValueEventListener(object : ValueEventListener {
@@ -96,7 +93,8 @@ class home : AppCompatActivity() {
     }
 
     fun captureMoments(view: View){
-
+        val captureIntent = Intent(this@home, CaptureMoment::class.java)
+        startActivity(captureIntent)
     }
 
     fun myAlbums(view: View){
@@ -109,5 +107,6 @@ class home : AppCompatActivity() {
         myMomentsIntent.putExtra("albumTitle", "My Momments")
         startActivity(myMomentsIntent)
     }
+
 
 }

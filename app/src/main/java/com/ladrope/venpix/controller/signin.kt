@@ -78,8 +78,7 @@ class signin : AppCompatActivity() {
 
                     override fun onCancel() {
                         // App code
-                        val loginCancel: Int = resources.getIdentifier("LoginCancel", "string", packageName)
-                        Toast.makeText(this@signin, loginCancel, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@signin, getString(R.string.loginCancel), Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onError(exception: FacebookException) {

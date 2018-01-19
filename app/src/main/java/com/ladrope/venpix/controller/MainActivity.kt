@@ -44,13 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
-        if(mAuth?.currentUser == null){
 
-        }else{
-            var homeIntent = Intent(this, home::class.java)
-            startActivity(homeIntent)
-            finish()
-        }
 
         //facebook sdk
         FacebookSdk.sdkInitialize(getApplicationContext())
@@ -67,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         setFactory()
         loadAnimations()
         startTimer()
-
 
     }
 
@@ -149,23 +142,41 @@ class MainActivity : AppCompatActivity() {
         timer.purge()
     }
 
-    public override fun onStart() {
+    override fun onStart() {
         super.onStart()
 
+
         Branch.getInstance().initSession(object : Branch.BranchReferralInitListener{
+
             override fun onInitFinished(referringParams: JSONObject, error: BranchError?) {
                 if (error == null) {
                     Log.e("BRANCH SDK", referringParams.toString())
+                    if(mAuth?.currentUser == null){
+
+                    }else{
+                        var homeIntent = Intent(applicationContext, home::class.java)
+                        startActivity(homeIntent)
+                        finish()
+                    }
+
                 } else {
                     Log.e("BRANCH SDK", error.message)
+                    if(mAuth?.currentUser == null){
+
+                    }else{
+                        var homeIntent = Intent(applicationContext, home::class.java)
+                        startActivity(homeIntent)
+                        finish()
+                    }
                 }
             }
         }, this.intent.data, this)
+
     }
 
-    public override fun onNewIntent(intent: Intent) {
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
         this.intent = intent
     }
-
-
 }

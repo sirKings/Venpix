@@ -31,12 +31,11 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
         android:contentDescription="@string/profile_picture"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/editProfile"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/paschal" />
+        app:srcCompat="@drawable/profile_img" />
 
 
     <ImageView

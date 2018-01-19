@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso
 /**
  * Created by USER on 1/10/18.
  */
-class MomentAdapter(options: FirebaseRecyclerOptions<Moment>, private val albumkey: String, private val context: Context): FirebaseRecyclerAdapter<Moment, MomentAdapter.ViewHolder>(options){
+class MomentAdapter(options: FirebaseRecyclerOptions<Moment>, private val albumkey: String, private val albumCreator: String, private val context: Context): FirebaseRecyclerAdapter<Moment, MomentAdapter.ViewHolder>(options){
     override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Moment) {
         holder?.bindItem(model)
     }
@@ -38,6 +38,7 @@ class MomentAdapter(options: FirebaseRecyclerOptions<Moment>, private val albumk
                 val fullScreenIntent = Intent(context, moment_fullscreen::class.java)
                 fullScreenIntent.putExtra("position", adapterPosition)
                 fullScreenIntent.putExtra("albumKey", albumkey)
+                fullScreenIntent.putExtra("albumCreator", albumCreator)
                 context.startActivity(fullScreenIntent)
 
             }

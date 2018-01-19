@@ -24,6 +24,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:onClick="addToFavourites"
             app:srcCompat="@android:drawable/btn_star_big_on" />
 
         <ImageButton
@@ -32,6 +33,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:onClick="delete"
             app:srcCompat="@android:drawable/ic_menu_delete" />
 
         <ImageButton
@@ -41,6 +43,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:contentDescription="TODO"
+            android:onClick="share"
             app:srcCompat="@android:drawable/ic_menu_share" />
     </LinearLayout>
 

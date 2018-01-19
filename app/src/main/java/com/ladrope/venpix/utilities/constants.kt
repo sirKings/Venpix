@@ -5,3 +5,5 @@ package com.ladrope.venpix.utilities
  */
 
 val RC_SIGN_IN = 3456
+val MY_SHAREDPREF_NAME = "BUTTONSTATUS"
+val PERMISSION_REQUEST_CODE = 200

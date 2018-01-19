@@ -81,6 +81,7 @@ class AlbumAdapter(options: FirebaseRecyclerOptions<Album>, private val context:
                 var momentIntent = Intent(context, MyMoments::class.java)
                 momentIntent.putExtra("albumTitle", albumTitle.text.toString())
                 momentIntent.putExtra("albumKey", album.albumKey)
+                momentIntent.putExtra("albumCreator", album.creatorId)
                 context.startActivity(momentIntent)
             }
         }

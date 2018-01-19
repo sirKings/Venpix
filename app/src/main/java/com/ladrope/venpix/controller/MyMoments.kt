@@ -16,7 +16,6 @@ class MyMoments : AppCompatActivity() {
     var adapter: MomentAdapter? = null
     var layoutManager: RecyclerView.LayoutManager? = null
     var options: FirebaseRecyclerOptions<Moment>? = null
-    var momentsCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +23,7 @@ class MyMoments : AppCompatActivity() {
 
         val title = intent.extras.get("albumTitle")
         val albumKey = intent.extras.get("albumKey") as String
+        val albumCreator = intent.extras.get("albumCreator") as String
 
         albumTitle.text = title.toString()
 
@@ -34,17 +34,12 @@ class MyMoments : AppCompatActivity() {
                 .setQuery(query, Moment::class.java)
                 .build()
 
-        adapter = MomentAdapter(options!!, albumKey, this)
+        adapter = MomentAdapter(options!!, albumKey, albumCreator, this)
         layoutManager = GridLayoutManager(this, 4)
 
         moment_list.layoutManager = layoutManager
         moment_list.adapter = adapter
 
-        adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                momentsCount = positionStart
-            }
-        })
     }
 
     override fun onStart() {

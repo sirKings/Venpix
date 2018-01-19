@@ -30,7 +30,7 @@
     <string name="my_albums">my albums</string>
     <string name="create_new_album">+ create new album</string>
     <string name="capture_moments">+ capture moments</string>
-    <string name="my_moments">my moments</string>
+    <string name="my_moments">my favourite moments</string>
     <string name="invalidEmail">Enter a valid Email</string>
     <string name="passwordMatch">Passwords must match</string>
     <string name="loginCancel">Authentication denied</string>
@@ -43,6 +43,7 @@
     <string name="album_description">Album Description</string>
     <string name="album_description_story">A little description of what your album is about. This will help your friends know why they should help capture your moments</string>
     <string name="_1000">1000</string>
+    <string name="album_date_story">We want to create a reminder for you and your friends, about your event</string>
     <string name="number_pictures">Maximuim number of pictures</string>
     <string name="_50_friends">50 friends</string>
     <string name="no_of_friends_that_can_capture_your_moments">Number of friends that can capture your moments</string>
@@ -63,6 +64,7 @@
     <string name="unlimited">Unlimited</string>
     <string name="titleValidation">Please enter album name</string>
     <string name="descValidation">Please enter album description</string>
+    <string name="dateValidation">Please pick a date</string>
     <string name="my_albums_title">My Albums</string>
     <string name="albumimage">albumImage</string>
     <string name="moment_image">moment image</string>
@@ -73,6 +75,27 @@
     <string name="enterOldpassword">Enter old Password</string>
     <string name="enterNewPassword">Enter New Password</string>
     <string name="confirmNewpass">Confirm new password</string>
+    <string name="momentDeleteFailure">"Moment not deleted, try again later"</string>
+    <string name="momentDeleteSuccess">"Moment deleted"</string>
+    <string name="momentAddToFavSuc">"Moment added to favourites"</string>
+    <string name="momentAddToFavFail">"Moment not added, try again later"</string>
+    <string name="titleFav">My Favourite Moments</string>
+    <string name="passUpdated">Password Update Successful</string>
+    <string name="passUpdateFail">Password update failed</string>
+    <string name="enterAll">Please enter all details</string>
+    <string name="chooseImage">Choose an Image</string>
+    <string name="onlyOwnerDel">Only the album owner can delete this</string>
+    <string name="uploadFail">Upload failed</string>
+    <string name="uploadSucc">Updates successful</string>
 
-
+    <string name="capture">Help me capture my moments</string>
+    <string name="album_date">Pick a date for your event</string>
+    <string name="pick_a_date">Pick a date</string>
+    <string name="capture_moment">Capture Moments</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="select_an_album">Select an Album</string>
+    <string name="permission">PhotoCollections needs to access your gallery in order to add your moments to your albums</string>
+    <string name="toggle_the_switch_on_to_automatically_add_all_new_images_and_videos_to_the_album">Toggle the switch on to automatically add all new images and videos to the album</string>
+    <string name="now_just_open_your_favourite_camera_app_and_start_capturing_your_moments">Now just open your favourite camera app and start capturing your moments</string>
 </resources>
