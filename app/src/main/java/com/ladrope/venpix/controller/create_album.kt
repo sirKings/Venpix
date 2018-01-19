@@ -2,6 +2,7 @@ package com.ladrope.venpix.controller
 
 import android.app.DatePickerDialog
 import android.app.ProgressDialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -19,13 +20,11 @@ import com.google.firebase.database.FirebaseDatabase
 import com.ladrope.venpix.R
 import com.ladrope.venpix.model.Album
 import com.ladrope.venpix.services.addAlbum
+import com.ladrope.venpix.services.addAlbumLink
 import io.branch.indexing.BranchUniversalObject
 import io.branch.referral.Branch
-import io.branch.referral.BranchError
-import io.branch.referral.SharingHelper
 import io.branch.referral.util.ContentMetadata
 import io.branch.referral.util.LinkProperties
-import io.branch.referral.util.ShareSheetStyle
 import kotlinx.android.synthetic.main.activity_create_album.*
 import kotlinx.android.synthetic.main.ca_add_choose_plan.*
 import kotlinx.android.synthetic.main.ca_add_description.*
@@ -50,6 +49,7 @@ class create_album: AppCompatActivity() {
     private var title: String? = null
     private var desc: String? = null
     private var date: Long? = null
+    private var albumKey: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -234,8 +234,8 @@ class create_album: AppCompatActivity() {
         premuimCard.setCardBackgroundColor(Color.WHITE)
     }
 
-    fun createLink(key: String){
-        val title : String = title.toString()
+    fun createLink(key: String) {
+        val title: String = title.toString()
         val desc: String = desc.toString()
         val date: String = date.toString()
         val plan: String = plan.toString()
@@ -246,43 +246,29 @@ class create_album: AppCompatActivity() {
                 .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
                 .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
                 .setContentMetadata(ContentMetadata().addCustomMetadata("plan", plan))
-                .setContentMetadata(ContentMetadata().addCustomMetadata("date",date))
+                .setContentMetadata(ContentMetadata().addCustomMetadata("date", date))
 
         val lp = LinkProperties()
-                lp.setChannel("facebook")
+        lp.setChannel("facebook")
                 .setFeature("sharing")
                 .setCampaign("content 123 launch")
                 .setStage("new user")
                 .addControlParameter("custom_random", "hello")
 
-
-        val ss =  ShareSheetStyle(this@create_album, getString(R.string.capture), title +": "+ desc)
-            ss.setCopyUrlStyle(resources.getDrawable(android.R.drawable.ic_menu_send), "Copy", "Added to clipboard")
-                .setMoreOptionStyle(resources.getDrawable(android.R.drawable.ic_menu_search), "Show more")
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK)
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.EMAIL)
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.MESSAGE)
-                .addPreferredSharingOption(SharingHelper.SHARE_WITH.HANGOUT)
-                    .addPreferredSharingOption(SharingHelper.SHARE_WITH.TWITTER)
-                    .addPreferredSharingOption(SharingHelper.SHARE_WITH.FACEBOOK_MESSENGER)
-                .setAsFullWidthStyle(true)
-                .setSharingTitle("Share With")
-
-        buo.showShareSheet(this, lp, ss, object : Branch.BranchLinkShareListener {
-            override fun onShareLinkDialogLaunched() {}
-            override fun onShareLinkDialogDismissed() {
-
+        buo.generateShortUrl(this, lp, Branch.BranchLinkCreateListener { url, error ->
+            if (error == null) {
+                addAlbumLink(albumKey, uid, url)
+                val share = Intent(Intent.ACTION_SEND)
+                share.type = "text/*"
+                share.putExtra(Intent.EXTRA_TEXT, url)
+                startActivity(Intent.createChooser(share, "Share Link"))
             }
-            override fun onLinkShareResponse(sharedLink: String, sharedChannel: String, error: BranchError) {
-
-            }
-            override fun onChannelSelected(channelName: String) {}
         })
     }
 
     fun createAlbum(){
 
-        var progressDialog = ProgressDialog(this)
+        val progressDialog = ProgressDialog(this)
         progressDialog.setTitle("Creating your Link")
         progressDialog.setCanceledOnTouchOutside(false)
         progressDialog.show()
@@ -291,19 +277,21 @@ class create_album: AppCompatActivity() {
 
         val album = Album()
         album.creatorName = userDisplayName
-        album.albumTitle = title
-        album.albumDesc = desc
-        album.creatorId = uid
+        album.albumTitle = title!!
+        album.albumDesc = desc!!
+        album.creatorId = uid!!
         album.created_at = Calendar.getInstance().timeInMillis
+        album.event_date = date!!
 
         val albumRef = FirebaseDatabase.getInstance().reference.child("albums")
 
         val key = albumRef.push().key
 
+        albumKey = key
+
         albumRef.child(key).setValue(album).addOnCompleteListener {
             task: Task<Void> ->
             if(task.isSuccessful){
-                Log.e("Link", key)
                 createLink(key)
                 album.albumKey = key
                 addAlbum(uid!!, album)

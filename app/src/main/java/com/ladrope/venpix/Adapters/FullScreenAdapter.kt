@@ -8,6 +8,8 @@ import com.hiteshsahu.awesome_gallery.view.widget.TouchImageView
 import com.ladrope.venpix.model.Moment
 import com.squareup.picasso.Picasso
 
+
+
 /**
  * Created by USER on 1/16/18.
  */
@@ -20,6 +22,17 @@ class FullScreenAdapter(private var list: ArrayList<Moment>) : PagerAdapter() {
     override fun getCount(): Int {
         return list.size
     }
+
+
+    override fun getItemPosition(`object`: Any): Int {
+        //return super.getItemPosition(`object`)
+        when (list.contains(`object`)){
+            true -> return list.indexOf(`object`)
+            false-> return POSITION_NONE
+        }
+
+    }
+
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
 

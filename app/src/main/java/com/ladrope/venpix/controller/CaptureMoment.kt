@@ -32,6 +32,7 @@ class CaptureMoment : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     var albumList: ArrayList<Album>? = null
     private var selectedAlbum: String? = null
     private var buttonStatus: Boolean? = null
+    private var itemSetup = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +51,7 @@ class CaptureMoment : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     fun switchClicked(view: View){
-        Log.e("SelectedAlbum", selectedAlbum)
+
         if (selectedAlbum == null){
             Toast.makeText(this,R.string.select_an_album,Toast.LENGTH_SHORT).show()
             captureMomentSwitch.isChecked = false
@@ -76,6 +77,13 @@ class CaptureMoment : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(arg0: AdapterView<*>, arg1: View, position: Int, id: Long) {
         selectedAlbum = albumList!![position].albumKey
+
+        if(itemSetup){
+            captureMomentSwitch.isChecked = false
+        }else{
+            itemSetup = true
+        }
+
     }
 
     override fun onNothingSelected(arg0: AdapterView<*>) {
@@ -181,6 +189,7 @@ class CaptureMoment : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     fun startService() {
         val serviceIntent = Intent(baseContext, ObserverService::class.java)
         serviceIntent.putExtra("albumKey", selectedAlbum)
+        serviceIntent.putExtra("uid", FirebaseAuth.getInstance().uid)
         startService(serviceIntent)
 
     }

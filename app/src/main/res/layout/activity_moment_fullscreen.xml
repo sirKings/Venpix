@@ -24,6 +24,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:contentDescription="@string/favBtn"
             android:onClick="addToFavourites"
             app:srcCompat="@android:drawable/btn_star_big_on" />
 
@@ -33,6 +34,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:contentDescription="@string/deleteBtn"
             android:onClick="delete"
             app:srcCompat="@android:drawable/ic_menu_delete" />
 
@@ -42,7 +44,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/shareBtn"
             android:onClick="share"
             app:srcCompat="@android:drawable/ic_menu_share" />
     </LinearLayout>

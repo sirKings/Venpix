@@ -18,7 +18,6 @@ import com.ladrope.venpix.Adapters.FullScreenAdapter
 import com.ladrope.venpix.R
 import com.ladrope.venpix.model.Moment
 import com.ladrope.venpix.services.addToMyFavourites
-import com.ladrope.venpix.services.deleteMoment
 import com.ladrope.venpix.widget.ExtendedViewPager
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_moment_fullscreen.*
@@ -98,7 +97,7 @@ class moment_fullscreen : AppCompatActivity() {
     }
 
     fun share(view: View){
-        var tempImageView = ImageView(this)
+        val tempImageView = ImageView(this)
         Picasso.with(this).load(momentList!![viewPager!!.currentItem].url).into(tempImageView)
 
         val uri = getLocalBitmapUri(tempImageView)
@@ -147,7 +146,8 @@ class moment_fullscreen : AppCompatActivity() {
     fun delete(view: View){
         val moment = momentList!![viewPager!!.currentItem]
         if (albumCreator == FirebaseAuth.getInstance().uid){
-            deleteMoment(moment, applicationContext, albumKey!!)
+           deleteMoment(moment)
+
         }else{
             Toast.makeText(this,getString(R.string.onlyOwnerDel), Toast.LENGTH_SHORT).show()
         }
@@ -156,6 +156,30 @@ class moment_fullscreen : AppCompatActivity() {
     fun addToFavourites(view: View){
         val moment = momentList!![viewPager!!.currentItem]
         addToMyFavourites(moment, applicationContext)
+    }
+
+    private fun deleteMoment(moment: Moment) {
+
+
+        var databaseRef: DatabaseReference? = null
+        if (albumKey == "null"){
+            databaseRef  = FirebaseDatabase.getInstance()
+                    .reference.child("users")
+                    .child(FirebaseAuth.getInstance().uid)
+                    .child("favourites").child(moment.key)
+        }else{
+            databaseRef = FirebaseDatabase.getInstance()
+                    .reference.child("albums").child(albumKey).child("moments").child(moment.key)
+        }
+
+        databaseRef?.setValue(null)?.addOnFailureListener {
+            Toast.makeText(this,getString(R.string.momentDeleteFailure), Toast.LENGTH_SHORT).show()
+
+        }?.addOnCompleteListener {
+            Toast.makeText(this,getString(R.string.momentDeleteSuccess), Toast.LENGTH_SHORT).show()
+            adapter?.notifyDataSetChanged()
+        }
+
     }
 }
 

@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -19,7 +20,10 @@ import com.ladrope.venpix.R
 import com.ladrope.venpix.controller.MyMoments
 import com.ladrope.venpix.model.Album
 import com.ladrope.venpix.model.Moment
+import com.ladrope.venpix.services.removeAlbum
+import com.ladrope.venpix.services.shareAlbum
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.album_row.view.*
 
 
 /**
@@ -29,6 +33,8 @@ import com.squareup.picasso.Picasso
 
 
 class AlbumAdapter(options: FirebaseRecyclerOptions<Album>, private val context: Context): FirebaseRecyclerAdapter<Album, AlbumAdapter.ViewHolder>(options){
+
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Album) {
         holder.bindItem(model)
     }
@@ -84,6 +90,15 @@ class AlbumAdapter(options: FirebaseRecyclerOptions<Album>, private val context:
                 momentIntent.putExtra("albumCreator", album.creatorId)
                 context.startActivity(momentIntent)
             }
+
+            itemView.albumDelete.setOnClickListener {
+                removeAlbum(FirebaseAuth.getInstance().uid, album.albumKey, context)
+            }
+
+            itemView.albumShare.setOnClickListener {
+                shareAlbum(album, context)
+            }
+
         }
     }
 

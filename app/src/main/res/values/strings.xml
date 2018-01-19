@@ -93,9 +93,14 @@
     <string name="pick_a_date">Pick a date</string>
     <string name="capture_moment">Capture Moments</string>
     <string name="on">ON</string>
+    <string name="albumDeleteFail">Could not delete album, Try again later</string>
+    <string name="albumDeleteSucc">Album Deleted!</string>
     <string name="off">OFF</string>
     <string name="select_an_album">Select an Album</string>
     <string name="permission">PhotoCollections needs to access your gallery in order to add your moments to your albums</string>
     <string name="toggle_the_switch_on_to_automatically_add_all_new_images_and_videos_to_the_album">Toggle the switch on to automatically add all new images and videos to the album</string>
     <string name="now_just_open_your_favourite_camera_app_and_start_capturing_your_moments">Now just open your favourite camera app and start capturing your moments</string>
+    <string name="shareBtn">Share Button</string>
+    <string name="deleteBtn">Delete Button</string>
+    <string name="favBtn">Add to favourite button</string>
 </resources>

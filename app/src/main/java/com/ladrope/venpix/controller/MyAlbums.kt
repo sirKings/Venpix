@@ -53,4 +53,5 @@ class MyAlbums : AppCompatActivity() {
         super.onStop()
         adapter?.stopListening()
     }
+
 }

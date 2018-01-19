@@ -170,7 +170,7 @@ class Settings : AppCompatActivity() {
                     }
 
                     override fun onSuccess(requestId: String?, resultData: MutableMap<Any?, Any?>?) {
-                        var updateObj = HashMap<String, Any?>()
+                        val updateObj = HashMap<String, Any?>()
                             updateObj.put(mImage!!, resultData?.get("url"))
                             mDatabase!!.updateChildren(updateObj)
                                         .addOnCompleteListener { task: Task<Void> ->
