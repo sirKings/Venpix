@@ -103,4 +103,5 @@
     <string name="shareBtn">Share Button</string>
     <string name="deleteBtn">Delete Button</string>
     <string name="favBtn">Add to favourite button</string>
+    <string name="select">Select</string>
 </resources>

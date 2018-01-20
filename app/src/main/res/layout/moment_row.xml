@@ -13,4 +13,13 @@
         android:scaleType="centerCrop"
         android:contentDescription="@string/moment_image"
         app:srcCompat="@drawable/paschal" />
+
+    <CheckBox
+        android:id="@+id/selectBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"/>
 </RelativeLayout>

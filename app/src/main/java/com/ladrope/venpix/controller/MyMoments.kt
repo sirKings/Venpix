@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.database.FirebaseDatabase
 import com.ladrope.venpix.Adapters.MomentAdapter
@@ -50,6 +51,23 @@ class MyMoments : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         adapter?.stopListening()
+    }
+
+    fun SelectState(view: View){
+        if (adapter!!.state){
+            momentListDeleteBtn.visibility = View.GONE
+            momentListShareBtn.visibility = View.GONE
+            momentListSelectBtn.visibility = View.VISIBLE
+            adapter?.state = false
+            adapter?.notifyDataSetChanged()
+        }else {
+            momentListDeleteBtn.visibility = View.VISIBLE
+            momentListShareBtn.visibility = View.VISIBLE
+            momentListSelectBtn.visibility = View.GONE
+            adapter?.state = true
+            adapter?.notifyDataSetChanged()
+        }
+
     }
 
 }

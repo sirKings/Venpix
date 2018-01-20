@@ -19,6 +19,9 @@ import kotlinx.android.synthetic.main.moment_row.view.*
  * Created by USER on 1/10/18.
  */
 class MomentAdapter(options: FirebaseRecyclerOptions<Moment>, private val albumkey: String, private val albumCreator: String, private val context: Context): FirebaseRecyclerAdapter<Moment, MomentAdapter.ViewHolder>(options){
+
+    var state = false
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int, model: Moment) {
         holder?.bindItem(model)
     }
@@ -34,22 +37,50 @@ class MomentAdapter(options: FirebaseRecyclerOptions<Moment>, private val albumk
             val momentImage = itemView.momentLayout
 
             Picasso.with(context).load(moment.url).placeholder(R.drawable.profile_img).into(momentImage);
+            if (state){
 
-            itemView.setOnClickListener {
-                val fullScreenIntent = Intent(context, moment_fullscreen::class.java)
-                fullScreenIntent.putExtra("position", adapterPosition)
-                fullScreenIntent.putExtra("albumKey", albumkey)
-                fullScreenIntent.putExtra("albumCreator", albumCreator)
-                context.startActivity(fullScreenIntent)
+                itemView.selectBox.visibility = View.VISIBLE
 
+                itemView.setOnClickListener {
+                    if (moment.isSelected){
+                        itemView.selectBox.isChecked = false
+                        moment.isSelected = false
+                        itemView.momentLayout.clearColorFilter()
+                    }else{
+                        itemView.selectBox.isChecked = true
+                        moment.isSelected = true
+                        itemView.momentLayout.setColorFilter(R.color.colorAccent, PorterDuff.Mode.OVERLAY)
+                    }
+                }
+            }else{
+                itemView.setOnClickListener {
+                    val fullScreenIntent = Intent(context, moment_fullscreen::class.java)
+                    fullScreenIntent.putExtra("position", adapterPosition)
+                    fullScreenIntent.putExtra("albumKey", albumkey)
+                    fullScreenIntent.putExtra("albumCreator", albumCreator)
+                    context.startActivity(fullScreenIntent)
+
+                }
             }
 
-            itemView.setOnLongClickListener(object:View.OnLongClickListener {
-                override fun onLongClick(v:View):Boolean {
-                    itemView.momentLayout.setColorFilter(R.color.colorAccent, PorterDuff.Mode.OVERLAY)
-                    return true
-                }
-            })
+//            itemView.setOnLongClickListener(object:View.OnLongClickListener {
+//                override fun onLongClick(v:View):Boolean {
+//                    state = true
+//                    if (moment.isSelected){
+//                        itemView.momentLayout.setColorFilter(R.color.colorAccent, PorterDuff.Mode.DARKEN)
+//                        itemView.selectBox.visibility = View.VISIBLE
+//                        itemView.selectBox.isChecked = false
+//                        moment.isSelected = false
+//                    }else{
+//                        itemView.momentLayout.setColorFilter(R.color.colorAccent, PorterDuff.Mode.DARKEN)
+//                        itemView.selectBox.visibility = View.VISIBLE
+//                        itemView.selectBox.isChecked = false
+//                        moment.isSelected = true
+//                    }
+//
+//                    return true
+//                }
+//            })
 
         }
     }

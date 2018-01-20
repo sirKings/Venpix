@@ -10,13 +10,16 @@ class Moment() {
     var tag: String? = null
     var albumKey: String? = null
     var created_by: String? = null
+    var isSelected = false
 
-    constructor(created_at: String, key: String, url: String, tag: String, albumKey: String, created_by: String): this(){
+
+    constructor(created_at: String, key: String, url: String, tag: String, albumKey: String, created_by: String, isSelected: Boolean): this(){
         this.created_at = created_at
         this.key = key
         this.url = url
         this.tag = tag
         this.albumKey = albumKey
         this.created_by = created_by
+        this.isSelected = isSelected
     }
 }
