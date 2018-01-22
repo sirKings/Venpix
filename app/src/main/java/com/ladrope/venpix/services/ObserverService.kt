@@ -17,14 +17,18 @@ import com.google.firebase.database.FirebaseDatabase
 import com.ladrope.venpix.model.Moment
 
 
+
+
 /**
  * Created by USER on 1/18/18.
  */
 class ObserverService: Service() {
-    private var myObserver: MyObserver? = null
+    private var myImageObserver: MyImageObserver? = null
+    private var myVideoObserver: MyVideoObserver? = null
     private var albumKey: String? = null
     private var uid: String? = null
-    private  var prevAdded: String? = null
+    private  var prevImageAdded: String? = null
+    private var prevVideoAdded: String? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -35,10 +39,14 @@ class ObserverService: Service() {
         albumKey = intent?.extras?.getString("albumKey")
         uid = intent?.extras?.getString("uid")
 
-        myObserver = MyObserver(Handler(), applicationContext)
+        myImageObserver = MyImageObserver(Handler(), applicationContext)
+        myVideoObserver = MyVideoObserver(Handler(), applicationContext)
 
-        contentResolver.registerContentObserver(android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI,true, myObserver)
-        contentResolver.registerContentObserver(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, true, myObserver)
+        contentResolver.registerContentObserver(android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI,true, myImageObserver)
+        contentResolver.registerContentObserver(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, true, myImageObserver)
+
+        contentResolver.registerContentObserver(android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI,true, myVideoObserver)
+        contentResolver.registerContentObserver(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true, myVideoObserver)
 
         Log.e("Service", "Started")
         Log.e("albumKey", albumKey)
@@ -48,20 +56,26 @@ class ObserverService: Service() {
     override fun onDestroy() {
         super.onDestroy()
         Log.e("Service", "Destroyed")
-        contentResolver.unregisterContentObserver(myObserver)
+        contentResolver.unregisterContentObserver(myImageObserver)
+
 
     }
 
-    inner class MyObserver(handler: Handler,  private val context: Context) : ContentObserver(handler){
+    inner class MyImageObserver(handler: Handler,  private val context: Context) : ContentObserver(handler){
 
         override fun onChange(selfChange: Boolean) {
             super.onChange(selfChange)
-            Log.d("your_tag", "Internal Media has been changed" + albumKey)
+            Log.d("ImageObserver", "Internal Media has been changed" + albumKey)
             super.onChange(selfChange)
-            val timestamp = readLastDateFromMediaStore(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            val imageUri = readLastDateFromMediaStore(context, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             // comapare with your stored last value and do what you need to do
-            Log.e("timestamp", timestamp)
-            uploadImage(timestamp)
+            Log.e("timestamp", imageUri)
+            if (imageUri == "Nothing found"){
+
+            }else{
+                uploadImage(imageUri, "IMAGE")
+            }
+
 
 
         }
@@ -93,8 +107,8 @@ class ObserverService: Service() {
         }
     }
 
-    fun uploadImage(uri: String){
-        val imageName = getImageName(uri)
+    fun uploadImage(uri: String, type: String){
+        val imageName = getName(uri)
 
         class callback: UploadCallback {
             override fun onReschedule(requestId: String?, error: ErrorInfo?) {
@@ -111,9 +125,9 @@ class ObserverService: Service() {
 
             override fun onSuccess(requestId: String?, resultData: MutableMap<Any?, Any?>?) {
                 Log.e("Service Upload", "Successful")
-                var url = resultData?.get("url") as String
+                val url = resultData?.get("url") as String
 
-                if ( url == prevAdded ){
+                if ( url == prevImageAdded || url == prevVideoAdded ){
 
                 }else{
                     val dataRef = FirebaseDatabase.getInstance().reference.child("albums").child(albumKey).child("moments")
@@ -125,10 +139,16 @@ class ObserverService: Service() {
                     moment.url = url
                     moment.created_at = System.currentTimeMillis().toString()
                     moment.key = key
+                    moment.type = type
 
                     dataRef.child(key).setValue(moment).addOnCompleteListener { Log.e("Moment Service", "Added successfull") }
                             .addOnFailureListener { Log.e("Service Moment", "Not added") }
-                    prevAdded = url
+                    if (type == "IMAGE"){
+                        prevImageAdded = url
+                    }else{
+                        prevVideoAdded = url
+                    }
+
                 }
             }
 
@@ -137,14 +157,67 @@ class ObserverService: Service() {
         }
 
 
-        var requestid = MediaManager.get().upload(uri).unsigned("kfmwfbua").option("public_id", uid.toString()+imageName).callback(callback()).dispatch()
+
+
+        var requestid = MediaManager.get().upload(uri).unsigned("kfmwfbua").option("public_id", uid.toString()+imageName).option("resource_type", "auto").callback(callback()).dispatch()
 
     }
 
-    fun getImageName(uri: String): String{
+    fun getName(uri: String): String{
         val index = uri.lastIndexOf('/')
 
-        val name = uri.substring(index + 1)
+        val tempName = uri.substring(index + 1)
+        val formatIndex = tempName.lastIndexOf('.')
+
+        val name = tempName.substring(0, formatIndex)
+
         return name
+    }
+
+    //video handlers
+
+    inner class MyVideoObserver(handler: Handler,  private val context: Context) : ContentObserver(handler){
+
+        override fun onChange(selfChange: Boolean) {
+            super.onChange(selfChange)
+            Log.e("VideoObserver", "Internal Media has been changed" + albumKey)
+            super.onChange(selfChange)
+            val videoUri = readLastDateFromMediaStore(context, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+            // comapare with your stored last value and do what you need to do
+            Log.e("timestamp", videoUri)
+            if (videoUri == "Nothing found"){
+
+            }else{
+                uploadImage(videoUri, "VIDEO")
+            }
+
+
+        }
+
+        override fun deliverSelfNotifications(): Boolean {
+            return true
+        }
+
+        private fun readLastDateFromMediaStore(context: Context, uri: Uri): String {
+            var cursor: Cursor? = null
+
+            try {
+                val proj = arrayOf(MediaStore.Video.Media.DATA)
+                cursor = context.contentResolver.query(uri, proj, null, null, MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC")
+                val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+                val id = cursor!!.getColumnIndex("_id")
+                Log.e("ID", id.toString())
+                var lastAdded = "Nothing found"
+                if(cursor.moveToFirst()){
+                    lastAdded = cursor!!.getString(column_index)
+                }
+                return lastAdded
+            } finally {
+                if (cursor != null) {
+                    cursor.close()
+                }
+            }
+
+        }
     }
 }

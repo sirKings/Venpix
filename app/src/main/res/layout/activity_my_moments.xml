@@ -12,12 +12,14 @@
         android:id="@+id/albumTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/colorAccent"
         android:textSize="22sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,16 +29,16 @@
         android:id="@+id/moment_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/albumTitle" />
+        app:layout_constraintTop_toTopOf="@+id/guideline11" />
 
     <TextView
         android:id="@+id/momentListSelectBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
         android:clickable="true"
         android:focusable="true"
@@ -44,7 +46,7 @@
         android:text="@string/select"
         android:textColor="@color/colorAccent"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/albumTitle"
+        app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageButton
@@ -55,7 +57,7 @@
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/shareBtn"
-        android:onClick="SelectState"
+        android:onClick="shareSelectedMoments"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -69,9 +71,35 @@
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/deleteBtn"
-        android:onClick="SelectState"
+        android:onClick="deleteSelectedMoment"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_delete" />
+
+    <TextView
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:onClick="cancelSelection"
+        android:text="@android:string/cancel"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/guideline11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="46dp" />
+
 </android.support.constraint.ConstraintLayout>

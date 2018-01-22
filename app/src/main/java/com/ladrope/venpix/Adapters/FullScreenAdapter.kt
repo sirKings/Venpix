@@ -50,4 +50,9 @@ class FullScreenAdapter(private var list: ArrayList<Moment>) : PagerAdapter() {
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as View)
     }
+
+    fun deleteMoment(position: Int){
+        list.removeAt(position)
+        notifyDataSetChanged()
+    }
 }

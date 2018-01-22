@@ -109,8 +109,13 @@ class CaptureMoment : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 for (data in p0!!.getChildren()) {
                     val album = data.getValue(Album::class.java)
 
-                    albumList!!.add(album!!)
-                    adapter?.notifyDataSetChanged()
+                    if(isExpired(album?.event_date!!)){
+
+                    }else{
+                        albumList!!.add(album!!)
+                        adapter?.notifyDataSetChanged()
+                    }
+
                 }
             }
         })
@@ -197,5 +202,9 @@ class CaptureMoment : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     // Method to stop the service
     fun stopService() {
         stopService(Intent(baseContext, ObserverService::class.java))
+    }
+
+    fun isExpired(date: Long): Boolean{
+        return (date < System.currentTimeMillis())
     }
 }

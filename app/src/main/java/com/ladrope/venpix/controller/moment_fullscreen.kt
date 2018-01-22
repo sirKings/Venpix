@@ -1,13 +1,7 @@
 package com.ladrope.venpix.controller
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.ImageView
@@ -18,12 +12,10 @@ import com.ladrope.venpix.Adapters.FullScreenAdapter
 import com.ladrope.venpix.R
 import com.ladrope.venpix.model.Moment
 import com.ladrope.venpix.services.addToMyFavourites
+import com.ladrope.venpix.services.getLocalBitmapUri
 import com.ladrope.venpix.widget.ExtendedViewPager
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_moment_fullscreen.*
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 class moment_fullscreen : AppCompatActivity() {
@@ -100,7 +92,7 @@ class moment_fullscreen : AppCompatActivity() {
         val tempImageView = ImageView(this)
         Picasso.with(this).load(momentList!![viewPager!!.currentItem].url).into(tempImageView)
 
-        val uri = getLocalBitmapUri(tempImageView)
+        val uri = getLocalBitmapUri(tempImageView, applicationContext)
 
         val share = Intent(Intent.ACTION_SEND)
             share.type = "image/*"
@@ -109,39 +101,6 @@ class moment_fullscreen : AppCompatActivity() {
 
     }
 
-
-    // Returns the URI path to the Bitmap displayed in specified ImageView
-    fun getLocalBitmapUri(imageView: ImageView): Uri? {
-        // Extract Bitmap from ImageView drawable
-        val drawable = imageView.getDrawable()
-        var bmp: Bitmap? = null
-        if (drawable is BitmapDrawable) {
-            bmp = (imageView.getDrawable() as BitmapDrawable).bitmap
-        } else {
-            return null
-        }
-        // Store image to default external storage directory
-        var bmpUri: Uri? = null
-        try {
-            val file = File(applicationContext.getExternalFilesDir(
-                    Environment.DIRECTORY_DOWNLOADS), "share_image_" + System.currentTimeMillis() + ".png")
-            file.getParentFile().mkdirs()
-            val out = FileOutputStream(file)
-            bmp!!.compress(Bitmap.CompressFormat.PNG, 90, out)
-            out.close()
-
-            if(Build.VERSION.SDK_INT <= 24){
-                bmpUri = Uri.fromFile(file)
-            }else{
-                bmpUri = FileProvider.getUriForFile(this, "com.ladrope.venpix.fileprovider", file)
-            }
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        return bmpUri
-    }
 
     fun delete(view: View){
         val moment = momentList!![viewPager!!.currentItem]
@@ -177,7 +136,7 @@ class moment_fullscreen : AppCompatActivity() {
 
         }?.addOnCompleteListener {
             Toast.makeText(this,getString(R.string.momentDeleteSuccess), Toast.LENGTH_SHORT).show()
-            adapter?.notifyDataSetChanged()
+            adapter?.deleteMoment(viewPager?.currentItem!!)
         }
 
     }
