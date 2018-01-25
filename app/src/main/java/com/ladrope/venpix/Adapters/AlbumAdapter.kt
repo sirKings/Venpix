@@ -54,9 +54,9 @@ class AlbumAdapter(options: FirebaseRecyclerOptions<Album>, private val context:
             albumTitle.text = album.albumTitle
             albumCreator.text = album.creatorName
 
-            if(album.albumDesc!!.length > 20){
+            if(album.albumDesc!!.length > 26){
 
-                albumDesc.text = album.albumDesc!!.slice(0..20) + "..."
+                albumDesc.text = album.albumDesc!!.slice(0..25) + "..."
             }else{
                 albumDesc.text = album.albumDesc
             }
@@ -69,10 +69,11 @@ class AlbumAdapter(options: FirebaseRecyclerOptions<Album>, private val context:
                         val moment = snapshot.children.iterator().next().getValue(Moment::class.java)
                         imageUrl = moment?.url
                         Log.e("image", imageUrl)
-                        Picasso.with(context).load(imageUrl).placeholder(R.drawable.profile_img).into(albumLayout)
+                        val url = getThumbUrl(imageUrl!!)
+                        Picasso.with(context).load(url).placeholder(R.drawable.profile_img).into(albumLayout)
                     } catch (e: Throwable) {
                         Log.e("Image", "Error retrieving image url")
-                        Picasso.with(context).load(imageUrl).placeholder(R.drawable.profile_img).into(albumLayout)
+                        Picasso.with(context).load(R.drawable.profile_img).into(albumLayout)
                     }
 
                 }
@@ -84,7 +85,7 @@ class AlbumAdapter(options: FirebaseRecyclerOptions<Album>, private val context:
 
                 Log.e("Album", album.albumKey)
 
-                var momentIntent = Intent(context, MyMoments::class.java)
+                val momentIntent = Intent(context, MyMoments::class.java)
                 momentIntent.putExtra("albumTitle", albumTitle.text.toString())
                 momentIntent.putExtra("albumKey", album.albumKey)
                 momentIntent.putExtra("albumCreator", album.creatorId)
@@ -100,6 +101,13 @@ class AlbumAdapter(options: FirebaseRecyclerOptions<Album>, private val context:
             }
 
         }
+    }
+
+    fun getThumbUrl(url: String): String{
+        val index = url.lastIndexOf('.')
+        val firstPart = url.substring(0, index+1)
+        val control = "jpg"
+        return firstPart + control
     }
 
 }

@@ -12,7 +12,7 @@ import com.ladrope.venpix.model.Album
  */
 
 
-fun addAlbum(uid: String, album: Album) {
+fun addAlbum(uid: String?, album: Album) {
     val database = FirebaseDatabase.getInstance()
 
     val userAlbumRef = database.getReference("users").child(uid).child("albums").child(album.albumKey)

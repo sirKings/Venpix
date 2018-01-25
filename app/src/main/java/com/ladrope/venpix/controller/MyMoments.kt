@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -17,6 +18,7 @@ import com.ladrope.venpix.model.Moment
 import com.ladrope.venpix.services.getLocalBitmapUri
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_my_moments.*
+import kotlinx.android.synthetic.main.moment_row.*
 
 class MyMoments : AppCompatActivity() {
 
@@ -81,13 +83,24 @@ class MyMoments : AppCompatActivity() {
 
     fun share(list: ArrayList<Moment>){
 
+        Log.e("SelectedMoments", list.toString())
+
         val uriList = ArrayList<Uri>()
 
+        Log.e("UriSelected", uriList.toString())
+
         for (i in list){
-            val tempImageView = ImageView(this)
-            Picasso.with(this).load(i.url).into(tempImageView)
-            val uri = getLocalBitmapUri(tempImageView, applicationContext)
-            uriList.add(uri!!)
+            if (i.type == "VIDEO"){
+
+            }else{
+                val tempImageView = ImageView(this)
+                Picasso.with(this).load(i.url).into(tempImageView)
+                val uri = getLocalBitmapUri(tempImageView, applicationContext)
+                Log.e("Uri", uri.toString())
+
+                uriList.add(uriList.size, uri!!)
+            }
+
         }
 
         val share = Intent(Intent.ACTION_SEND_MULTIPLE)
@@ -109,6 +122,7 @@ class MyMoments : AppCompatActivity() {
         momentListSelectBtn.visibility = View.VISIBLE
         cancel.visibility = View.GONE
         albumTitle.visibility = View.VISIBLE
+        selectBox.visibility = View.GONE
         adapter?.state = false
         adapter?.notifyDataSetChanged()
     }

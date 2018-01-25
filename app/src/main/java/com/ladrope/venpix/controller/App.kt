@@ -1,6 +1,7 @@
 package com.ladrope.venpix.controller
 
 import android.app.Application
+import com.android.volley.toolbox.Volley
 import com.cloudinary.android.MediaManager
 import io.branch.referral.Branch
 
@@ -17,6 +18,9 @@ class App : Application() {
 
         // Cloudinary Initialization
         MediaManager.init(this)
+
+        //Volley request queue
+
     }
 
 

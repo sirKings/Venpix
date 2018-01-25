@@ -24,12 +24,12 @@ class MyAlbums : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_albums)
 
-        var uid = FirebaseAuth.getInstance().uid
-
+        val uid = FirebaseAuth.getInstance().uid
 
 
         val database = FirebaseDatabase.getInstance()
         val query = database.getReference("users").child(uid).child("albums")
+
 
         options = FirebaseRecyclerOptions.Builder<Album>()
                 .setQuery(query, Album::class.java)

@@ -239,21 +239,24 @@ class create_album: AppCompatActivity() {
         val desc: String = desc.toString()
         val date: String = date.toString()
         val plan: String = plan.toString()
+        val creatorName: String = mAuth!!.currentUser!!.displayName!!
+        val creatorId: String = mAuth!!.uid!!
 
         buo.setCanonicalIdentifier(key)
                 .setTitle(title)
                 .setContentDescription(desc)
                 .setContentIndexingMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
                 .setLocalIndexMode(BranchUniversalObject.CONTENT_INDEX_MODE.PUBLIC)
-                .setContentMetadata(ContentMetadata().addCustomMetadata("plan", plan))
-                .setContentMetadata(ContentMetadata().addCustomMetadata("date", date))
+                .setContentMetadata(ContentMetadata().addCustomMetadata("creatorName", creatorName))
 
         val lp = LinkProperties()
         lp.setChannel("facebook")
                 .setFeature("sharing")
                 .setCampaign("content 123 launch")
                 .setStage("new user")
-                .addControlParameter("custom_random", "hello")
+                .addControlParameter("plan",plan)
+                .addControlParameter("date", date)
+                .addControlParameter("creatorId", creatorId)
 
         buo.generateShortUrl(this, lp, Branch.BranchLinkCreateListener { url, error ->
             if (error == null) {
@@ -282,6 +285,7 @@ class create_album: AppCompatActivity() {
         album.creatorId = uid!!
         album.created_at = Calendar.getInstance().timeInMillis
         album.event_date = date!!
+        album.plan = plan
 
         val albumRef = FirebaseDatabase.getInstance().reference.child("albums")
 

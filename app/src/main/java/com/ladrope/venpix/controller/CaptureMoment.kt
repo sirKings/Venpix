@@ -5,10 +5,14 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -18,12 +22,17 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.ladrope.venpix.Adapters.AlbumSpinnerAdapter
+import com.ladrope.venpix.BuildConfig
 import com.ladrope.venpix.R
 import com.ladrope.venpix.model.Album
 import com.ladrope.venpix.services.ObserverService
 import com.ladrope.venpix.utilities.MY_SHAREDPREF_NAME
 import com.ladrope.venpix.utilities.PERMISSION_REQUEST_CODE
 import kotlinx.android.synthetic.main.activity_capture_moment.*
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class CaptureMoment : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -207,4 +216,53 @@ class CaptureMoment : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     fun isExpired(date: Long): Boolean{
         return (date < System.currentTimeMillis())
     }
+
+    fun start(view: View){
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+
+            var photoFile: File? = null
+            try {
+                photoFile = createImageFile()
+            } catch (ex: IOException) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            var photoURI: Uri? = null
+            if (photoFile != null) {
+
+                photoURI = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photoFile)
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                startActivity(takePictureIntent)
+            }
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "JPEG_" + timeStamp + "_"
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(
+                imageFileName, /* prefix */
+                ".jpg", /* suffix */
+                storageDir      /* directory */
+        )
+
+        // Save a file: path for use with ACTION_VIEW intents
+         galleryAddPic(image.absolutePath)
+        return image
+    }
+
+    private fun galleryAddPic(path: String) {
+        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        val f = File(path)
+        val contentUri = Uri.fromFile(f)
+        mediaScanIntent.data = contentUri
+        this.sendBroadcast(mediaScanIntent)
+    }
+
 }

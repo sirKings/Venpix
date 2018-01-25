@@ -42,6 +42,9 @@ class MomentAdapter(options: FirebaseRecyclerOptions<Moment>, private val albumk
 
             if (moment.type == "VIDEO"){
                 thumb = getVideoThumbUrl(moment.url!!)
+                itemView.duration.visibility = View.VISIBLE
+                itemView.duration.text = getDurationString(moment.length!!)
+
             }else{
                 thumb = getImageThumbUrl(moment.url!!)
             }
@@ -94,5 +97,26 @@ class MomentAdapter(options: FirebaseRecyclerOptions<Moment>, private val albumk
         val firstPart = url.substring(0, index+1)
         val control = "jpg"
         return firstPart + control
+    }
+
+    fun getDurationString(totalSecs: Double): String{
+
+        val hours = totalSecs / 3600
+        val minutes = (totalSecs % 3600) / 60
+        val seconds = totalSecs % 60
+
+        return twoDigitString(hours.toInt()) + " : " + twoDigitString(minutes.toInt()) + " : " + twoDigitString(seconds.toInt())
+    }
+
+    private fun twoDigitString(number: Int): String {
+
+        if (number == 0) {
+            return "00"
+        }
+
+        return if (number / 10 == 0) {
+            "0" + number
+        } else number.toString()
+
     }
 }

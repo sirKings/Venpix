@@ -5,6 +5,7 @@ import android.graphics.Matrix
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.util.Log
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
@@ -31,16 +32,19 @@ class TouchImageView : ImageView {
     internal var oldMeasuredHeight: Int = 0
 
     internal var mScaleDetector: ScaleGestureDetector? = null
+    var mSwipeDownDetector: GestureDetector? = null
 
     internal var context: Context? = null
 
     constructor(context: Context) : super(context) {
         sharedConstructing(context)
-    }
 
+    }
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         sharedConstructing(context)
+
     }
+
 
     private fun sharedConstructing(context: Context) {
         super.setClickable(true)
@@ -214,5 +218,10 @@ class TouchImageView : ImageView {
         internal val DRAG = 1
         internal val ZOOM = 2
         internal val CLICK = 3
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        return false
     }
 }

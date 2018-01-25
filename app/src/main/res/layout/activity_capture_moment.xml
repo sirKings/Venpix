@@ -94,4 +94,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/captureMomentSwitch" />
 
+    <Button
+        android:id="@+id/startCaptureBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/colorAccent"
+        android:onClick="start"
+        android:padding="15dp"
+        android:text="@string/start_capturing_moments"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView33" />
+
 </android.support.constraint.ConstraintLayout>

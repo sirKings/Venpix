@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_moment_fullscreen.*
 
 class moment_fullscreen : AppCompatActivity() {
 
+
     var adapter: FullScreenAdapter? = null
     var viewPager: ExtendedViewPager? = null
     var momentList: ArrayList<Moment>? = null
@@ -44,7 +45,7 @@ class moment_fullscreen : AppCompatActivity() {
         getMoments(albumKey!!)
 
         viewPager = fullscreenviewPager
-        adapter = FullScreenAdapter(momentList!!)
+        adapter = FullScreenAdapter(momentList!!, this)
 
         viewPager?.adapter = adapter
 
@@ -89,16 +90,11 @@ class moment_fullscreen : AppCompatActivity() {
     }
 
     fun share(view: View){
-        val tempImageView = ImageView(this)
-        Picasso.with(this).load(momentList!![viewPager!!.currentItem].url).into(tempImageView)
-
-        val uri = getLocalBitmapUri(tempImageView, applicationContext)
-
-        val share = Intent(Intent.ACTION_SEND)
-            share.type = "image/*"
-            share.putExtra(Intent.EXTRA_STREAM, uri )
-            startActivity(Intent.createChooser(share, "Share Image"))
-
+        if (momentList!![viewPager!!.currentItem].type =="VIDEO"){
+            shareVideo()
+        }else{
+            shareImage()
+        }
     }
 
 
@@ -140,5 +136,40 @@ class moment_fullscreen : AppCompatActivity() {
         }
 
     }
+
+    fun shareVideo() {
+
+//        val path = momentList!![viewPager!!.currentItem].url
+//        MediaScannerConnection.scanFile(this, arrayOf(path),
+//                null, object : MediaScannerConnection.OnScanCompletedListener {
+//            override fun onScanCompleted(path: String, uri: Uri) {
+//                Log.e(path,uri.toString())
+//                val shareIntent = Intent(
+//                        android.content.Intent.ACTION_SEND)
+//                shareIntent.type = "video/*"
+//                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+//                shareIntent
+//                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+//                startActivity(Intent.createChooser(shareIntent,
+//                        getString(R.string.share_video)))
+//
+//            }
+//        })
+        Toast.makeText(this, getString(R.string.shareFail), Toast.LENGTH_SHORT).show()
+    }
+
+    fun shareImage(){
+        val tempImageView = ImageView(this)
+        Picasso.with(this).load(momentList!![viewPager!!.currentItem].url).into(tempImageView)
+
+        val uri = getLocalBitmapUri(tempImageView, applicationContext)
+
+        val share = Intent(Intent.ACTION_SEND)
+        share.type = ("image/*, video/*")
+        share.putExtra(Intent.EXTRA_STREAM, uri )
+        startActivity(Intent.createChooser(share, getString(R.string.share_image)))
+
+    }
+
 }
 

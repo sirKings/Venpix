@@ -1,6 +1,7 @@
 package com.ladrope.venpix.services
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -11,10 +12,14 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.ladrope.venpix.R
 import com.ladrope.venpix.model.Moment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+
+
+
 
 fun addToMyFavourites(moment: Moment, context: Context){
     val currentUser = FirebaseAuth.getInstance().currentUser?.uid
@@ -38,7 +43,9 @@ fun addToMyFavourites(moment: Moment, context: Context){
 fun getLocalBitmapUri(imageView: ImageView, context: Context): Uri? {
     // Extract Bitmap from ImageView drawable
     val drawable = imageView.getDrawable()
+
     var bmp: Bitmap? = null
+
     if (drawable is BitmapDrawable) {
         bmp = (imageView.getDrawable() as BitmapDrawable).bitmap
     } else {
@@ -66,3 +73,39 @@ fun getLocalBitmapUri(imageView: ImageView, context: Context): Uri? {
 
     return bmpUri
 }
+
+
+fun saveImage(any: Any?, context: Context){
+    var iv: ImageView? = null
+    if (any is ImageView){
+        iv = any
+        val draw = iv?.getDrawable() as BitmapDrawable
+        val bitmap = draw.bitmap
+
+        var outStream: FileOutputStream? = null
+        val sdCard = Environment.getExternalStorageDirectory()
+        val dir = File(sdCard.absolutePath + "/PhotoCollections")
+        dir.mkdirs()
+        val fileName = String.format("%d.jpg", System.currentTimeMillis())
+        val outFile = File(dir, fileName)
+        outStream = FileOutputStream(outFile)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
+        outStream.flush()
+        outStream.close()
+
+        val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        var data: Uri? = null
+        if(Build.VERSION.SDK_INT <= 24){
+            data = Uri.fromFile(outFile)
+        }else {
+            data = FileProvider.getUriForFile(context, "com.ladrope.venpix.fileprovider", outFile)
+        }
+        intent.data = data
+        context.sendBroadcast(intent)
+
+        Toast.makeText(context, context.getString(R.string.imageSaved), Toast.LENGTH_SHORT).show()
+
+    }
+
+}
+

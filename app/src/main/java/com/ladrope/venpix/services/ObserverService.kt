@@ -124,7 +124,7 @@ class ObserverService: Service() {
             }
 
             override fun onSuccess(requestId: String?, resultData: MutableMap<Any?, Any?>?) {
-                Log.e("Service Upload", "Successful")
+                Log.e("Service Upload", resultData.toString())
                 val url = resultData?.get("url") as String
 
                 if ( url == prevImageAdded || url == prevVideoAdded ){
@@ -140,6 +140,10 @@ class ObserverService: Service() {
                     moment.created_at = System.currentTimeMillis().toString()
                     moment.key = key
                     moment.type = type
+
+                    if (type == "VIDEO"){
+                        moment.length = resultData.get("duration") as Double
+                    }
 
                     dataRef.child(key).setValue(moment).addOnCompleteListener { Log.e("Moment Service", "Added successfull") }
                             .addOnFailureListener { Log.e("Service Moment", "Not added") }

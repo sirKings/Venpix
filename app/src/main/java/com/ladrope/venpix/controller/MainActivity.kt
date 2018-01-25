@@ -1,5 +1,6 @@
 package com.ladrope.venpix.controller
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -19,6 +20,8 @@ import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.auth.FirebaseAuth
 import com.ladrope.venpix.R
+import com.ladrope.venpix.model.Album
+import com.ladrope.venpix.utilities.NewAlbum
 import com.twitter.sdk.android.core.Twitter
 import io.branch.referral.Branch
 import io.branch.referral.BranchError
@@ -32,8 +35,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var textSwitcher: TextSwitcher
     lateinit var dotsLayout: LinearLayout
     private val timer = Timer()
+    var progressDialog: ProgressDialog? = null
 
-    private var mAuth: FirebaseAuth? = null
+    private var albumKey: String? = null
+    private val uid = FirebaseAuth.getInstance().uid
 
     var textList = arrayListOf<String>("Never let great moments slide pass you","Create an album and share your link with friends", "Get all your pictures in one vault and only you and your friends can see it")
     var index = 0
@@ -42,8 +47,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        mAuth = FirebaseAuth.getInstance()
-
+        progressDialog = ProgressDialog(this)
+        progressDialog?.setTitle("Setting up your albums")
+        progressDialog?.setCanceledOnTouchOutside(false)
+        progressDialog?.show()
 
 
         //facebook sdk
@@ -151,23 +158,34 @@ class MainActivity : AppCompatActivity() {
             override fun onInitFinished(referringParams: JSONObject, error: BranchError?) {
                 if (error == null) {
                     Log.e("BRANCH SDK", referringParams.toString())
-                    if(mAuth?.currentUser == null){
+                    val branchStatus = referringParams.getBoolean("+clicked_branch_link")
+                    if(branchStatus){
+                        albumKey = referringParams.getString("\$canonical_identifier")
+                        val userDisplayName = referringParams.getString("creatorName")
+                        val title = referringParams.getString("\$og_title")
+                        val desc = referringParams.getString("\$og_description")
+                        val date = referringParams.getString("date")
+                        val plan = referringParams.getString("plan")
+                        val creatorId = referringParams.getString("creatorId")
 
+                        val album = Album()
+                        album.creatorName = userDisplayName
+                        album.albumTitle = title
+                        album.albumDesc = desc
+                        album.event_date = date.toLong()
+                        album.plan = plan.toInt()
+                        album.albumKey = albumKey
+                        album.creatorId = creatorId
+
+                        NewAlbum = album
+                        login()
                     }else{
-                        var homeIntent = Intent(applicationContext, home::class.java)
-                        startActivity(homeIntent)
-                        finish()
+                        login()
                     }
 
                 } else {
                     Log.e("BRANCH SDK", error.message)
-                    if(mAuth?.currentUser == null){
-
-                    }else{
-                        var homeIntent = Intent(applicationContext, home::class.java)
-                        startActivity(homeIntent)
-                        finish()
-                    }
+                    login()
                 }
             }
         }, this.intent.data, this)
@@ -179,4 +197,18 @@ class MainActivity : AppCompatActivity() {
 
         this.intent = intent
     }
+
+    fun login(){
+
+        if(uid == null){
+
+        }else{
+
+            val homeIntent = Intent(applicationContext, home::class.java)
+            startActivity(homeIntent)
+            finish()
+        }
+        progressDialog?.dismiss()
+    }
+
 }
