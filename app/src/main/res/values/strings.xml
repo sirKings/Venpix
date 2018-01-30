@@ -1,14 +1,11 @@
 <resources>
-
     <string name="facebook_app_id" translatable="false">1529381790486231</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb1529381790486231</string>
-
     <string name="com.twitter.sdk.android.CONSUMER_KEY" translatable="false">CNa7zcjO1X7FJmfCdcKzmEKCP</string>
     <string name="com.twitter.sdk.android.CONSUMER_SECRET" translatable="false">SB7FMPkxQE4L0ttaE5a6jvCCa7xVQPe6LHl3Qo2YIixAcdEhLi
 </string>
 
-
-    <string name="app_name">VenPix</string>
+    <string name="app_name">PhotoCollections</string>
     <string name="sign_up">sign up</string>
     <string name="sign_in">Sign In</string>
     <string name="logo">logo</string>
@@ -110,4 +107,7 @@
     <string name="shareFail">Share Failed</string>
     <string name="start_capturing_moments">Start Capturing Moments</string>
     <string name="imageSaved">Image saved</string>
+    <string name="saveBtn">Save Button</string>
+    <string name="purchaseSuccessful">Purchase successful</string>
+    <string name="purchaseFail">Purchase Failed</string>
 </resources>

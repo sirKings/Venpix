@@ -158,30 +158,33 @@ class MainActivity : AppCompatActivity() {
             override fun onInitFinished(referringParams: JSONObject, error: BranchError?) {
                 if (error == null) {
                     Log.e("BRANCH SDK", referringParams.toString())
-                    val branchStatus = referringParams.getBoolean("+clicked_branch_link")
-                    if(branchStatus){
-                        albumKey = referringParams.getString("\$canonical_identifier")
-                        val userDisplayName = referringParams.getString("creatorName")
-                        val title = referringParams.getString("\$og_title")
-                        val desc = referringParams.getString("\$og_description")
-                        val date = referringParams.getString("date")
-                        val plan = referringParams.getString("plan")
-                        val creatorId = referringParams.getString("creatorId")
+                    if(referringParams.has("+clicked_branch_link")){
+                        val branchStatus = referringParams.getBoolean("+clicked_branch_link")
+                        if(branchStatus){
+                            albumKey = referringParams.getString("\$canonical_identifier")
+                            val userDisplayName = referringParams.getString("creatorName")
+                            val title = referringParams.getString("\$og_title")
+                            val desc = referringParams.getString("\$og_description")
+                            val date = referringParams.getString("date")
+                            val plan = referringParams.getString("plan")
+                            val creatorId = referringParams.getString("creatorId")
 
-                        val album = Album()
-                        album.creatorName = userDisplayName
-                        album.albumTitle = title
-                        album.albumDesc = desc
-                        album.event_date = date.toLong()
-                        album.plan = plan.toInt()
-                        album.albumKey = albumKey
-                        album.creatorId = creatorId
+                            val album = Album()
+                            album.creatorName = userDisplayName
+                            album.albumTitle = title
+                            album.albumDesc = desc
+                            album.event_date = date.toLong()
+                            album.plan = plan.toInt()
+                            album.albumKey = albumKey
+                            album.creatorId = creatorId
 
-                        NewAlbum = album
-                        login()
-                    }else{
-                        login()
+                            NewAlbum = album
+                            login()
+                        }else{
+                            login()
+                        }
                     }
+
 
                 } else {
                     Log.e("BRANCH SDK", error.message)

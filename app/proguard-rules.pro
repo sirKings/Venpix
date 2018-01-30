@@ -38,3 +38,8 @@
 
 -keep class com.lsjwzh.widget.recyclerviewpager.**
 -dontwarn com.lsjwzh.widget.recyclerviewpager.**
+
+-ignorewarnings
+-keep class * {
+    public private *;
+}

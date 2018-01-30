@@ -21,6 +21,11 @@ import com.ladrope.venpix.R
 import com.ladrope.venpix.model.Album
 import com.ladrope.venpix.services.addAlbum
 import com.ladrope.venpix.services.addAlbumLink
+import com.ladrope.venpix.util.IabHelper
+import com.ladrope.venpix.util.IabResult
+import com.ladrope.venpix.util.Inventory
+import com.ladrope.venpix.util.Purchase
+import com.ladrope.venpix.utilities.PURCHASE_REQUEST
 import io.branch.indexing.BranchUniversalObject
 import io.branch.referral.Branch
 import io.branch.referral.util.ContentMetadata
@@ -31,6 +36,7 @@ import kotlinx.android.synthetic.main.ca_add_description.*
 import kotlinx.android.synthetic.main.ca_add_title.*
 import kotlinx.android.synthetic.main.fragment_fragment_four.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class create_album: AppCompatActivity() {
@@ -41,8 +47,11 @@ class create_album: AppCompatActivity() {
     private val mFragmentList = arrayListOf<Fragment>()
     lateinit var dotsLayout: LinearLayout
 
+    private var IAPkey = ""
+
     var plan: Int = 1
     val buo = BranchUniversalObject()
+    var ITEM_SKU = ""
 
     private var mAuth: FirebaseAuth? = null
     private var uid: String? = null
@@ -50,6 +59,8 @@ class create_album: AppCompatActivity() {
     private var desc: String? = null
     private var date: Long? = null
     private var albumKey: String? = null
+
+    private var mHelper: com.ladrope.venpix.util.IabHelper? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +82,37 @@ class create_album: AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
         uid = mAuth?.uid
+
+        IAPkey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0k7jlVCRGBJAelMU0E5FM+bYCq7s/aiVf41JSOhRmJ3QIdfQD8wsDX5HI5ZCAMLYU5C/M80WngOjdN/9C1s/1EFaWM0G5r4vUKDtplpOTNwSSL1N4X43U4qRSfYYXqonhvr8N44m5JDTHMJOxbtUhJUZ/a6zfI6Gkx14lgI+m0Yat6Mbyxs4mZfmR/zPhqo9XNyGVXSc7j7/UJaCQtKW9DysdoNv2VC9UwOC5o/T6+2FXxM2YqkSHdakFHRRqPGbp1ezkna1Rw1eMqn4fDK6b3Oky00DjMgZ5xshVGOyjVZBbsEGnGjBGOz/lfc8Uxd7u3kJzABFAZyEwyNEyVmUowIDAQAB"
+
+        mHelper = IabHelper(this, IAPkey)
+
+        mHelper?.enableDebugLogging(true)
+
+        mHelper?.startSetup(object:IabHelper.OnIabSetupFinishedListener {
+            override fun onIabSetupFinished(result: IabResult) {
+                Log.d("mHelper", "Setup finished.")
+                if (!result.isSuccess())
+                {
+                    // Oh noes, there was a problem.
+                    Toast.makeText(this@create_album,
+                            "Problem setting up in-app billing: " + result,
+                            Toast.LENGTH_LONG).show()
+                    return
+                }
+                // Have we been disposed of in the meantime? If so, quit.
+                if (mHelper == null)
+                    return
+                // IAP is fully set up. Now, let's get an inventory of stuff we
+                // own.
+                Log.d("mHelper", "Setup successful. Querying inventory.")
+                val list = ArrayList<String>()
+                list.add("premuim")
+                list.add("plus")
+                list.add("pro")
+                mHelper?.queryInventoryAsync(true, list, list, mGotInventoryListener )
+            }
+        })
 
     }
 
@@ -200,27 +242,31 @@ class create_album: AppCompatActivity() {
         clearCards()
         val freeCard = free_card
         freeCard.setCardBackgroundColor(getResources().getColor(R.color.colorAccent))
+
     }
 
     fun proPlanSelected(view: View){
-        plan = 2
         clearCards()
         val proCard = pro_card
         proCard.setCardBackgroundColor(getResources().getColor(R.color.colorAccent))
+        purchasePlan("pro")
+        ITEM_SKU = "pro"
     }
 
     fun plusPlanSelected(view: View){
-        plan = 3
         clearCards()
         val plusCard = plus_card
         plusCard.setCardBackgroundColor(getResources().getColor(R.color.colorAccent))
+        purchasePlan("plus")
+        ITEM_SKU = "plus"
     }
 
     fun premuimPlanSelected(view: View){
-        plan = 4
         clearCards()
         val premuimCard = premuim_card
         premuimCard.setCardBackgroundColor(getResources().getColor(R.color.colorAccent))
+        purchasePlan("premuim")
+        ITEM_SKU = "premuim"
     }
 
     fun clearCards(){
@@ -302,5 +348,114 @@ class create_album: AppCompatActivity() {
                 progressDialog.dismiss()
             }
         }
+    }
+
+
+    var mGotInventoryListener:IabHelper.QueryInventoryFinishedListener = object:IabHelper.QueryInventoryFinishedListener {
+        override fun onQueryInventoryFinished(result:IabResult,
+                                     inventory: Inventory) {
+            Log.d("mHelper", "Query inventory finished.")
+            // Have we been disposed of in the meantime? If so, quit.
+            if (mHelper == null)
+            {
+                return
+            }
+            // Is it a failure?
+            if (result.isFailure)
+            {
+                Toast.makeText(this@create_album,
+                        "Failed to query inventory: " + result,
+                        Toast.LENGTH_LONG).show()
+                return
+            }
+            Log.d("mHelper", "Query inventory was successful.")
+            proPrice.text = inventory.getSkuDetails("pro").price
+            plusPrice.text = inventory.getSkuDetails("plus").price
+            premuimPrice.text = inventory.getSkuDetails("premuim").price
+        }
+    }
+
+    fun purchasePlan(SKU: String){
+        mHelper?.launchPurchaseFlow(this@create_album, SKU, PURCHASE_REQUEST,
+                mPurchaseFinishedListener, "supertokenforonetimeintanlyconsumeditem")
+
+    }
+
+    override fun onActivityResult(requestCode:Int, resultCode:Int,
+                                   data:Intent) {
+            if (mHelper != null && !mHelper!!.handleActivityResult(requestCode,
+                            resultCode, data))
+            {
+                Log.e("mHelper","User closed the window")
+                super.onActivityResult(requestCode, resultCode, data)
+            }
+
+    }
+
+    var mPurchaseFinishedListener:IabHelper.OnIabPurchaseFinishedListener = object:IabHelper.OnIabPurchaseFinishedListener {
+        override fun onIabPurchaseFinished(result:IabResult,
+                                  purchase:Purchase?) {
+            if (result.isFailure)
+            {
+                // Handle error
+                Log.e("mHelper", "User bounced")
+                return
+            }
+            else if ( purchase?.getSku().equals(ITEM_SKU))
+            {
+                consumeItem()
+
+                //buyButton.setEnabled(false)
+            }
+        }
+    }
+    fun consumeItem() {
+        mHelper?.queryInventoryAsync(mReceivedInventoryListener)
+    }
+    var mReceivedInventoryListener:IabHelper.QueryInventoryFinishedListener = object:IabHelper.QueryInventoryFinishedListener {
+        override fun onQueryInventoryFinished(result:IabResult,
+                                     inventory:Inventory) {
+            if (result.isFailure)
+            {
+                // Handle failure
+                Log.e("mHelper", "helper dismised")
+            }
+            else
+            {
+                mHelper?.consumeAsync(inventory.getPurchase(ITEM_SKU),
+                        mConsumeFinishedListener)
+            }
+        }
+    }
+    var mConsumeFinishedListener:IabHelper.OnConsumeFinishedListener = object:IabHelper.OnConsumeFinishedListener {
+        override fun onConsumeFinished(purchase: Purchase,
+                              result:IabResult) {
+            if (result.isSuccess)
+            {
+                //clickButton.setEnabled(true)
+                when (ITEM_SKU){
+                    "pro"-> {
+                        plan = 2
+                    }
+                    "plus"-> {
+                        plan = 3
+                    }
+                    "premuim"-> {
+                        plan = 4
+                    }
+                }
+                Toast.makeText(this@create_album, getString(R.string.purchaseSuccessful), Toast.LENGTH_SHORT).show()
+            }
+            else
+            {
+                // handle error
+                Toast.makeText(this@create_album, getString(R.string.purchaseFail), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mHelper != null) mHelper?.dispose()
+        mHelper = null
     }
 }

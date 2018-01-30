@@ -13,3 +13,5 @@ val PERMISSION_REQUEST_CODE = 200
 var NewAlbum: Album? = null
 
 val ADD_ALBUM_LINK = "https://ventpix-e3bf7.firebaseapp.com/add-album"
+
+val PURCHASE_REQUEST = 1293

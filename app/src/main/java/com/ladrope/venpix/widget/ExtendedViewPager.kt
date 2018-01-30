@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.GestureDetector
-import android.view.MotionEvent
 import android.view.View
 import com.hiteshsahu.awesome_gallery.view.widget.TouchImageView
 
@@ -17,13 +16,13 @@ class ExtendedViewPager : ViewPager {
 
 
     constructor(context: Context) : super(context){
-        init()
+        //init()
     }
 
     var mGesture: GestureDetector? = null
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init()
+        //init()
     }
 
     override fun canScroll(v: View, checkV: Boolean, dx: Int, x: Int, y: Int): Boolean {
@@ -40,27 +39,27 @@ class ExtendedViewPager : ViewPager {
         }
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        if (!mGesture!!.onTouchEvent(ev)) {
-            super.onInterceptTouchEvent(ev)
-            return false
-        }
-
-        return true
-    }
-
-    fun init() {
-        mGesture = GestureDetector(getContext(), object:GestureDetector.SimpleOnGestureListener() {
-
-            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-                if (distanceX == 0f){
-                    return false
-                }
-                return true
-            }
-
-        })
-    }
+//    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+//        if (!mGesture!!.onTouchEvent(ev)) {
+//            super.onInterceptTouchEvent(ev)
+//            return false
+//        }
+//
+//        return true
+//    }
+//
+//    fun init() {
+//        mGesture = GestureDetector(getContext(), object:GestureDetector.SimpleOnGestureListener() {
+//
+//            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+//                if (distanceX == 0f){
+//                    return false
+//                }
+//                return true
+//            }
+//
+//        })
+//    }
 
 
 }

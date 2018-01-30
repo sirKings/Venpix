@@ -98,7 +98,7 @@ class MyMoments : AppCompatActivity() {
                 val uri = getLocalBitmapUri(tempImageView, applicationContext)
                 Log.e("Uri", uri.toString())
 
-                uriList.add(uriList.size, uri!!)
+                //uriList.add(uriList.size, uri!!)
             }
 
         }

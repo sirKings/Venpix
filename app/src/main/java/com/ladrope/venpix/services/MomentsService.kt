@@ -64,7 +64,7 @@ fun getLocalBitmapUri(imageView: ImageView, context: Context): Uri? {
         if(Build.VERSION.SDK_INT <= 24){
             bmpUri = Uri.fromFile(file)
         }else{
-            bmpUri = FileProvider.getUriForFile(context, "com.ladrope.venpix.fileprovider", file)
+            bmpUri = FileProvider.getUriForFile(context, "com.ladrope.venpix.provider", file)
         }
 
     } catch (e: IOException) {
@@ -82,23 +82,24 @@ fun saveImage(any: Any?, context: Context){
         val draw = iv?.getDrawable() as BitmapDrawable
         val bitmap = draw.bitmap
 
-        var outStream: FileOutputStream? = null
         val sdCard = Environment.getExternalStorageDirectory()
         val dir = File(sdCard.absolutePath + "/PhotoCollections")
         dir.mkdirs()
-        val fileName = String.format("%d.jpg", System.currentTimeMillis())
+        val fileName = System.currentTimeMillis().toString() + ".jpg"
         val outFile = File(dir, fileName)
-        outStream = FileOutputStream(outFile)
+        outFile.parentFile.createNewFile()
+
+        val outStream = FileOutputStream(outFile)
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
         outStream.flush()
         outStream.close()
 
         val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-        var data: Uri? = null
+        val data: Uri?
         if(Build.VERSION.SDK_INT <= 24){
             data = Uri.fromFile(outFile)
         }else {
-            data = FileProvider.getUriForFile(context, "com.ladrope.venpix.fileprovider", outFile)
+            data = FileProvider.getUriForFile(context, "com.ladrope.venpix.provider", outFile)
         }
         intent.data = data
         context.sendBroadcast(intent)

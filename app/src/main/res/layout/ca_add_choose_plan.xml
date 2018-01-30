@@ -160,7 +160,7 @@
                     android:text="@string/pro" />
 
                 <TextView
-                    android:id="@+id/textView16"
+                    android:id="@+id/proPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -270,7 +270,7 @@
                     android:text="@string/plus" />
 
                 <TextView
-                    android:id="@+id/textView22"
+                    android:id="@+id/plusPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -380,7 +380,7 @@
                     android:text="@string/premuim" />
 
                 <TextView
-                    android:id="@+id/textView26"
+                    android:id="@+id/premuimPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"

@@ -19,6 +19,16 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
+            android:id="@+id/fullScreenSaveBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/saveBtn"
+            android:onClick="saveImage"
+            app:srcCompat="@android:drawable/stat_sys_download" />
+
+        <ImageButton
             android:id="@+id/fullScreenFavouriteBtn"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
